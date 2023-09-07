@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -42,7 +47,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "productId",
+						"type": "uint256"
+					}
+				],
 				"name": "showInStock",
 				"outputs": [
 					{
@@ -79,6 +90,40 @@
 						"internalType": "struct Test.Product[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userProducts",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "inStock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -137,11 +182,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0x1df12d00a9a8d296b80dae0687a8cffd21746f564ba72c3ed4f12036a407353b",
+			"keccak256": "0xbe413372ec98be13488a91dce50e02ddc1271a967b74035fd89fd7f0b6c35a28",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8dc036437cfac64ffdf83dde95a98092376f3ecf8fdb0834963a3d48b7977b9d",
-				"dweb:/ipfs/QmcZpDK5QrNpMuDZYTtQ1x6CY37454Qgr3VBprkKF4DvB1"
+				"bzz-raw://4587f66b4f7c9fc3c4c3aae5be3a72809a9eb7c994506df3aaac98b2155a1135",
+				"dweb:/ipfs/QmVTLouBPXSsKfq8jubw5N5yZwaLpp7Z1uGexkWe3udoXc"
 			]
 		}
 	},
