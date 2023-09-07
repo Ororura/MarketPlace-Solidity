@@ -50,6 +50,24 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "purchase",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "productId",
 						"type": "uint256"
 					}
@@ -182,11 +200,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0xbe413372ec98be13488a91dce50e02ddc1271a967b74035fd89fd7f0b6c35a28",
+			"keccak256": "0x300107a36800da6be4af04c4c715c273e6d9b11f6c53e50e7e3889f94e896acb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4587f66b4f7c9fc3c4c3aae5be3a72809a9eb7c994506df3aaac98b2155a1135",
-				"dweb:/ipfs/QmVTLouBPXSsKfq8jubw5N5yZwaLpp7Z1uGexkWe3udoXc"
+				"bzz-raw://36f3fb77e217a16eeaf205fb69b811e16b0270f9a8aa3d4a46286a2b2a657fd7",
+				"dweb:/ipfs/Qme47fZftAQnXHNHivuRBHHXg6tcHKNhT5G6eX9wu8tgXE"
 			]
 		}
 	},

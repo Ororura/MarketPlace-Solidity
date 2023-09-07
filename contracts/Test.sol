@@ -42,4 +42,26 @@ contract Test {
         require(productId < userProducts[owner].length, "Invalid product ID");
         return userProducts[owner][productId].inStock;
     }
+
+    function purchase(uint _amount, uint _id) public payable {
+            require(_amount <= userProducts[owner][_id].inStock); // Покупают меньше, чем в наличии
+            require(_amount >0); // Покупают больше, чем 0
+            uint totalPrice = _amount * userProducts[owner][_id].price;
+            require(msg.value >= totalPrice);
+
+            Product memory item = Product(_amount, userProducts[owner][0].price, userProducts[owner][0].name);
+            userProducts[owner][_id].inStock -= _amount;
+            userProducts[msg.sender].push(item);
+
+            if (msg.value > totalPrice) {
+                uint change = msg.value - totalPrice;
+                payable(msg.sender).transfer(change);
+            }
+
+            uint balance = address(this).balance;
+            payable(owner).transfer(balance);
+
+    }
+
+    // Исправить появление второго пользователя при покупке 
 }
