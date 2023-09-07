@@ -20,10 +20,12 @@ contract Test{
     mapping(address => User) public users;
 
     constructor(){
-        owner = msg.sender; 
+        owner = msg.sender;
+        users[owner] = User(0, Role.Market, new Product[](0));
     }
 
     function addItems(uint _inStock, uint _price, string calldata _name) public {
+        
         Product memory item = Product(_inStock, _price, _name);
         users[owner].product.push(item);
     }
@@ -36,13 +38,16 @@ contract Test{
         return users[owner].product[0].inStock;
     }
 
-    // function purchaseBread(uint _amount, uint id) public payable {
-    //     require(_amount <=users[owner].product.inStock); // Сделать проверку на кол-во покупок
+    // function purchaseBread(uint _amount, uint _id) public payable {
+    //     require(_amount <=users[owner].product[_id].inStock); // Покупают меньше, чем есть в наличии
     //     require(_amount > 0); //Пользователь покупает больше 0
-    //     uint totalPrice = _amount * markets[owner].breadPrice;
-    //     require(msg.value >= totalPrice);
+    //     uint totalPrice = _amount * users[owner].product[_id].price * 1 ether;
+    //     require(msg.value >= totalPrice); // Отправленных денег больше, чем итоговая цена
+        
+    //     Product memory 
+    //     users[owner].product[0].inStock -= _amount;
 
-    //     markets[owner].breadInStock -= _amount;
+    //     users[msg.sender].
     //     users[msg.sender].breadsPurchased += _amount;
 
     //     if (msg.value > totalPrice) {

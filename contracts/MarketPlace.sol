@@ -11,6 +11,7 @@ contract MarketPlace{
         owner = msg.sender;
         breadPrice = _breadPrice * 1 ether;
         breadInStock = _breadInStock;
+        User market = User(owner, uint(Role.market), 0);
     }
 
     function setBreadPrice (uint _breadPrice) public {
