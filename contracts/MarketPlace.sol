@@ -44,24 +44,29 @@ contract MarketPlace {
     }
 
     function purchase(uint _amount, uint _id) public payable {
-            require(_amount <= userProducts[owner][_id].inStock); // Покупают меньше, чем в наличии
-            require(_amount >0); // Покупают больше, чем 0
-            uint totalPrice = _amount * userProducts[owner][_id].price;
-            require(msg.value >= totalPrice);
+        require(_amount > 0, "Purchase amount must be greater than 0");
+        require(_id < userProducts[owner].length, "Invalid product ID");
 
-            Product memory item = Product(_amount, userProducts[owner][0].price, userProducts[owner][0].name);
-            userProducts[owner][_id].inStock -= _amount;
-            userProducts[msg.sender].push(item);
-
-            if (msg.value > totalPrice) {
-                uint change = msg.value - totalPrice;
-                payable(msg.sender).transfer(change);
-            }
-
-            uint balance = address(this).balance;
-            payable(owner).transfer(balance);
-
+        if (users[msg.sender].role != Role.User) {
+        users[msg.sender] = User(0, Role.User);
     }
 
-    // Исправить появление второго пользователя при покупке 
+        require(_amount <= userProducts[owner][_id].inStock, "Not enough stock available");
+
+        uint totalPrice = _amount * userProducts[owner][_id].price * 1 ether;
+        require(msg.value >= totalPrice, "Insufficient funds sent");
+
+        Product memory item = Product(_amount, userProducts[owner][_id].price, userProducts[owner][_id].name);
+        userProducts[owner][_id].inStock -= _amount;
+        
+        userProducts[msg.sender].push(item);
+
+        if (msg.value > totalPrice) {
+            uint change = msg.value - totalPrice;
+            payable(msg.sender).transfer(change);
+    }
+
+    uint balance = address(this).balance;
+    payable(owner).transfer(balance);
+    }
 }

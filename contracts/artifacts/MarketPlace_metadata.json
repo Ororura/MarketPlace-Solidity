@@ -200,11 +200,11 @@
 	},
 	"sources": {
 		"contracts/MarketPlace.sol": {
-			"keccak256": "0x7b8d28fc506872adf16cb7bf4a5b497a5b5ee7229050a52013ec4e40196ea1bf",
+			"keccak256": "0x373fe8886649d80aae80cc01852b9782a8400e8f200dda746d3f4618bf589ea9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d24751aa14e212360002abb2a66ca260d5b0d4d4a9859cf09bc847f71b92f870",
-				"dweb:/ipfs/QmebwDHf3U3um6MDeVcKRKxhYMQsK4mGyywU6UvGX5uppi"
+				"bzz-raw://99661c9a7bbb9941bfaa9c5832dfeb2d6f03ac5249f93bb6cc0cf10e7143b378",
+				"dweb:/ipfs/QmXyiwZZavERkWxCb6orRcQUhNEHayBYPoKx24wgdw7vY6"
 			]
 		}
 	},
