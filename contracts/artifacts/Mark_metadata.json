@@ -105,7 +105,7 @@
 								"type": "string"
 							}
 						],
-						"internalType": "struct MarketPlace.Product[]",
+						"internalType": "struct Mark.Product[]",
 						"name": "",
 						"type": "tuple[]"
 					}
@@ -163,7 +163,7 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "enum MarketPlace.Role",
+						"internalType": "enum Mark.Role",
 						"name": "role",
 						"type": "uint8"
 					}
@@ -185,7 +185,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlace.sol": "MarketPlace"
+			"contracts/Test.sol": "Mark"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -199,12 +199,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlace.sol": {
-			"keccak256": "0x7b8d28fc506872adf16cb7bf4a5b497a5b5ee7229050a52013ec4e40196ea1bf",
+		"contracts/Test.sol": {
+			"keccak256": "0x7113edb756e1c9379af672cfd11a3d350982a108cc7fa188ab988c9a101724af",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d24751aa14e212360002abb2a66ca260d5b0d4d4a9859cf09bc847f71b92f870",
-				"dweb:/ipfs/QmebwDHf3U3um6MDeVcKRKxhYMQsK4mGyywU6UvGX5uppi"
+				"bzz-raw://985033d298a803daf65cd94c02c09ee84d4198b72d3fc43cbf66f27c2385ad54",
+				"dweb:/ipfs/QmfXCc1X1MsnUMMSetfDhYCAeVzJyf2KqgU1rQGxexQpdV"
 			]
 		}
 	},
