@@ -32,21 +32,25 @@ contract Test{
         return users[owner].product;
     }
 
-    function purchaseBread(uint _amount, uint id) public payable {
-        require(_amount); // Сделать проверку на кол-во покупок
-        require(_amount > 0); //Пользователь покупает больше 0
-        uint totalPrice = _amount * markets[owner].breadPrice;
-        require(msg.value >= totalPrice);
-
-        markets[owner].breadInStock -= _amount;
-        users[msg.sender].breadsPurchased += _amount;
-
-        if (msg.value > totalPrice) {
-            uint change = msg.value - totalPrice;
-            payable(msg.sender).transfer(change);
-        }
-
-        uint balance = address(this).balance;
-        payable(owner).transfer(balance);
+    function showInStock() public view returns(uint) {
+        return users[owner].product[0].inStock;
     }
+
+    // function purchaseBread(uint _amount, uint id) public payable {
+    //     require(_amount <=users[owner].product.inStock); // Сделать проверку на кол-во покупок
+    //     require(_amount > 0); //Пользователь покупает больше 0
+    //     uint totalPrice = _amount * markets[owner].breadPrice;
+    //     require(msg.value >= totalPrice);
+
+    //     markets[owner].breadInStock -= _amount;
+    //     users[msg.sender].breadsPurchased += _amount;
+
+    //     if (msg.value > totalPrice) {
+    //         uint change = msg.value - totalPrice;
+    //         payable(msg.sender).transfer(change);
+    //     }
+
+    //     uint balance = address(this).balance;
+    //     payable(owner).transfer(balance);
+    // }
 }

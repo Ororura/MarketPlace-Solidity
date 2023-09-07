@@ -25,13 +25,13 @@ contract MarketPlace2{
 
     User public market = User(owner, uint(Role.market), 0);
 
-    function purchaseBread(uint _amount) public payable {
-            User storage buyer = User(msg.sender, uint(Role.buyer), msg.value); 
-            require(_amount <= breadInStock);
-            require(_amount >0);
-            uint totalPrice = _amount * breadPrice;
+    // function purchaseBread(uint _amount) public payable {
+    //         User storage buyer = User(msg.sender, uint(Role.buyer), msg.value); 
+    //         require(_amount <= breadInStock);
+    //         require(_amount >0);
+    //         uint totalPrice = _amount * breadPrice;
 
-    }
+    // }
 
     
     
