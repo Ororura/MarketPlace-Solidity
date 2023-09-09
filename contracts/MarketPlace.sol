@@ -44,38 +44,44 @@ contract MarketPlace {
     }
 
     function purchase(uint _amount, uint _id) public payable {
-    require(_amount > 0, "Purchase amount must be greater than 0");
-    require(_id < userProducts[owner].length, "Invalid product ID");
-    require(_amount <= userProducts[owner][_id].inStock, "Not enough stock available");
-
-    uint totalPrice = _amount * userProducts[owner][_id].price * 1 ether;
-    require(msg.value >= totalPrice, "Insufficient funds sent");
-
-    // Проверяем наличие продукта у пользователя
-    bool productExists = false;
-    for (uint i = 0; i < userProducts[msg.sender].length; i++) {
-        if (keccak256(bytes(userProducts[msg.sender][i].name)) == keccak256(bytes(userProducts[owner][_id].name))) {
-            userProducts[msg.sender][i].inStock += _amount;
-            productExists = true;
-            break; // Выходим из цикла, так как продукт найден
+        if (users[msg.sender].role == Role.User) {
+            users[msg.sender] = User(0, Role.User);
         }
-    }
+        
+        require(_amount > 0, "Purchase amount must be greater than 0");
+        require(_id < userProducts[owner].length, "Invalid product ID");
+        require(_amount <= userProducts[owner][_id].inStock, "Not enough stock available");
 
-    if (!productExists) {
-        // Если продукт не найден, добавляем его
-        Product memory newItem = Product(_amount, userProducts[owner][_id].price, userProducts[owner][_id].name);
-        userProducts[msg.sender].push(newItem);
-    }
+        uint totalPrice = _amount * userProducts[owner][_id].price * 1 ether;
+        require(msg.value >= totalPrice, "Insufficient funds sent");
 
-    userProducts[owner][_id].inStock -= _amount;
+        // Проверяем наличие продукта у пользователя
+        bool productExists = false;
+        for (uint i = 0; i < userProducts[msg.sender].length; i++) {
+            if (keccak256(bytes(userProducts[msg.sender][i].name)) == keccak256(bytes(userProducts[owner][_id].name))) {
+                userProducts[msg.sender][i].inStock += _amount;
+                productExists = true;
+                users[msg.sender].purchased = _amount + users[msg.sender].purchased;
+                break; // Выходим из цикла, так как продукт найден
+            }
+        }
 
-    if (msg.value > totalPrice) {
-        uint change = msg.value - totalPrice;
-        payable(msg.sender).transfer(change);
-    }
+        if (!productExists) {
+            // Если продукт не найден, добавляем его
+            Product memory newItem = Product(_amount, userProducts[owner][_id].price, userProducts[owner][_id].name);
+            userProducts[msg.sender].push(newItem);
+            users[msg.sender].purchased = _amount + users[msg.sender].purchased;
+        }
 
-    uint balance = address(this).balance;
-    payable(owner).transfer(balance);
-}
+        userProducts[owner][_id].inStock -= _amount;
+
+        if (msg.value > totalPrice) {
+            uint change = msg.value - totalPrice;
+            payable(msg.sender).transfer(change);
+        }
+
+        uint balance = address(this).balance;
+        payable(owner).transfer(balance);
+        }
 
 }
