@@ -34,6 +34,29 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_inStock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "addItemsSupplier",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -68,7 +91,25 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "productId",
+						"name": "_productId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "refillStore",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_productId",
 						"type": "uint256"
 					}
 				],
@@ -108,6 +149,19 @@
 						"internalType": "struct MarketPlace.Product[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "supplier",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -158,11 +212,6 @@
 				"name": "users",
 				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "purchased",
-						"type": "uint256"
-					},
-					{
 						"internalType": "enum MarketPlace.Role",
 						"name": "role",
 						"type": "uint8"
@@ -185,7 +234,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlace.sol": "MarketPlace"
+			"contracts/MarketPlaceTest.sol": "MarketPlace"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -199,12 +248,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlace.sol": {
-			"keccak256": "0x706a48a6ae2d2d08dfdcc7656699114a93ed44ad17ec3f8031730d79ca18e4dd",
+		"contracts/MarketPlaceTest.sol": {
+			"keccak256": "0xb42919ed8195056f1f8ed4b30eb10b4ba35a8931829be4919eefdaf276a4cd93",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2d4dae01274b7e734411cd13099db65fc65777fe47795ef76579c269c830b0cf",
-				"dweb:/ipfs/QmZJZi7FQnppQSyLfp5Pa7LcJDyeQdxT6zPoW6M18gGnW8"
+				"bzz-raw://b3104474299720e248361b8330b0f646d3c9fb2e56d9a5964989f7d264835b1e",
+				"dweb:/ipfs/QmNa4XkCKBo31T8teEgYH9ZvJWEnBxmrwExcVRMNPanCRs"
 			]
 		}
 	},

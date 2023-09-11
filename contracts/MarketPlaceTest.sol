@@ -7,7 +7,8 @@ pragma solidity ^0.8.0;
 
 contract MarketPlace {
     address public owner;
-    enum Role { User, Market }
+    address public supplier;
+    enum Role { User, Market, Supplier }
 
     struct User {
         Role role;
@@ -32,18 +33,41 @@ contract MarketPlace {
         users[owner] = User(Role.Market);
     }
 
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name) public{
+        supplier = msg.sender;
+        users[supplier] = User(Role.Supplier);
+        Product memory item = Product(_inStock, _price / 2, _name);
+        userProducts[msg.sender].push(item);
+    }
+
     function addItems(uint _inStock, uint _price, string calldata _name) public onlyOwner {
         Product memory item = Product(_inStock, _price, _name);
         userProducts[owner].push(item);
+    }
+
+    function refillStore(uint _productId, uint _amount) public payable onlyOwner{
+        require(_amount > 0, "Purchase amount must be greater than 0");
+        require(_productId < userProducts[owner].length, "Invalid product ID");
+
+        uint price = userProducts[owner][_productId].price;
+        uint totalPrice = price / 2 * _amount * 1 ether;
+
+        if (msg.value > totalPrice) {
+            uint change = msg.value - totalPrice;
+            payable(msg.sender).transfer(change);
+        }
+
+        userProducts[owner][_productId].inStock += _amount;
+
     }
 
     function showItems() public view returns (Product[] memory) {
         return userProducts[owner];
     }
 
-    function showInStock(uint productId) public view returns (uint) {
-        require(productId < userProducts[owner].length, "Invalid product ID");
-        return userProducts[owner][productId].inStock;
+    function showInStock(uint _productId) public view returns (uint) {
+        require(_productId < userProducts[owner].length, "Invalid product ID");
+        return userProducts[owner][_productId].inStock;
     }
 
     function purchase(uint _amount, uint _id) public payable {
