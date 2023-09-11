@@ -6,12 +6,12 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
 						"name": "_inStock",
@@ -58,6 +58,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "makeMarket",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
@@ -71,6 +78,11 @@
 			},
 			{
 				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
 						"name": "_amount",
@@ -90,6 +102,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_productId",
 						"type": "uint256"
@@ -103,55 +120,6 @@
 				"name": "refillStore",
 				"outputs": [],
 				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_productId",
-						"type": "uint256"
-					}
-				],
-				"name": "showInStock",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "showItems",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "inStock",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "price",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "name",
-								"type": "string"
-							}
-						],
-						"internalType": "struct MarketPlace.Product[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -249,11 +217,11 @@
 	},
 	"sources": {
 		"contracts/MarketPlaceTest.sol": {
-			"keccak256": "0xb42919ed8195056f1f8ed4b30eb10b4ba35a8931829be4919eefdaf276a4cd93",
+			"keccak256": "0xec83dc23f89a71881e75f5d1d54a880042b96e970958788b20883b130b010380",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3104474299720e248361b8330b0f646d3c9fb2e56d9a5964989f7d264835b1e",
-				"dweb:/ipfs/QmNa4XkCKBo31T8teEgYH9ZvJWEnBxmrwExcVRMNPanCRs"
+				"bzz-raw://71a54ad94d5814270f844f3d76fc901993373eb2e5a9bf0446301080b95c9bc1",
+				"dweb:/ipfs/QmNdsEmUbiL4nx8446fd9z7GjbzhyZ2idRnLyyD3vu3szi"
 			]
 		}
 	},
