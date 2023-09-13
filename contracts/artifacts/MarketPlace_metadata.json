@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -59,9 +64,40 @@
 						"internalType": "uint256",
 						"name": "_expDate",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_addressSupp",
+						"type": "address"
 					}
 				],
 				"name": "addItemsSupplier",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_idTicket",
+						"type": "uint256"
+					}
+				],
+				"name": "approveChangeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum MarketPlace.Role",
+						"name": "_role",
+						"type": "uint8"
+					}
+				],
+				"name": "changeRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -87,6 +123,20 @@
 			{
 				"inputs": [],
 				"name": "makeMarket",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "makeSupplier",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "makeUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -186,6 +236,11 @@
 						"internalType": "uint256",
 						"name": "_amount",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_supplier",
+						"type": "address"
 					}
 				],
 				"name": "refillStore",
@@ -212,13 +267,48 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "supplier",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_productId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_supplier",
+						"type": "address"
+					}
+				],
+				"name": "showProductsSupl",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "tickets",
 				"outputs": [
 					{
 						"internalType": "address",
-						"name": "",
+						"name": "userAddr",
 						"type": "address"
+					},
+					{
+						"internalType": "enum MarketPlace.Role",
+						"name": "role",
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -329,11 +419,11 @@
 	},
 	"sources": {
 		"contracts/MarketPlaceTest.sol": {
-			"keccak256": "0xcb681cd9777f4b1c8de294ae0f5b5afe04a352a1168e78a1a1713120ab7fe199",
+			"keccak256": "0xbd2c2467e2e1fb28e0d0d88f1e7fc44bbe3588e15735b45560abc2a1fb2bb1ec",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09b95bdcf539d36fc6dda6e6baa847f5406cc68a1c007ffb74bc373f7fc740e0",
-				"dweb:/ipfs/QmPKR5YwdRmnCkhswGiPwBVPZR7cJmbFvpM6UX8GMmPuuk"
+				"bzz-raw://0b74bf217888798144c688ec50749b15983daf05d23ae09c59b302085a915590",
+				"dweb:/ipfs/QmX2j69wmexTTZPXgYA7QrB3Rtf3cJddexSM49ioYBxQiR"
 			]
 		}
 	},

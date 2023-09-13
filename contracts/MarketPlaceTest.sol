@@ -1,14 +1,22 @@
 // SPDX-License-Identifier: MIT
 
-// TODO: Сделать рефералку. Пользователь генерирует реферальный код, 
-// который может использовать другой определенно-заданный пользователь только один раз. Скидка 10%
+// TODO: Сделать смену роли для пользователей. Сделать подтверждение смены роли 
  
 pragma solidity ^0.8.0;
 
 contract MarketPlace {
-    address public owner;
-    address public supplier;
     enum Role { User, Market, Supplier }
+    Ticket[] public tickets;
+    address public owner;
+
+    constructor(){
+        owner = msg.sender;
+    }
+
+    struct Ticket {
+        address userAddr;
+        Role role;
+    }
 
     struct User {
         Role role;
@@ -26,11 +34,32 @@ contract MarketPlace {
     mapping(address => Product[]) public userProducts;
     mapping(string => address) public referrals;
 
+
+    modifier OnlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
     
     modifier AccessControl(Role _role, address _shop){
         require(users[msg.sender].role == _role, unicode"");
         require(msg.sender == _shop, unicode"Магазин не соответсвует отправителю");
         _;
+    }
+
+    function makeUser() public {
+        users[msg.sender] = User(Role.User, 0);
+    }
+
+    function approveChangeRole(uint _idTicket) public OnlyOwner{
+        address userAddr = tickets[_idTicket].userAddr;
+        Role changedRole = tickets[_idTicket].role;
+        users[userAddr].role = changedRole;
+    }
+
+    function changeRole(Role _role) public{
+        // require(uint(users[msg.sender].role) >= 0);
+        // users[msg.sender].role = _role;
+        tickets.push(Ticket(msg.sender, _role));
     }
 
     function randMod(uint _modulus) public view returns(uint)
@@ -40,18 +69,19 @@ contract MarketPlace {
         return uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % _modulus;
     }
 
-    function genRef(string memory _nameRef, address _user) public{
+    function genRef(string memory _nameRef, address _user) public {
         require(msg.sender != _user);
         referrals[_nameRef] = _user;
     } 
 
-    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate) public{
-        supplier = msg.sender;
-        users[supplier] = User(Role.Supplier, 0);
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier, _addressSupp) {
         Product memory item = Product(_inStock, _price / 2, _name, _expDate);
-        userProducts[msg.sender].push(item);
+        userProducts[_addressSupp].push(item);
     }
     
+    function makeSupplier() public {
+        users[msg.sender] = User(Role.Supplier, 0);
+    }
 
     function makeMarket() public  {
         users[msg.sender] = User(Role.Market, 0);
@@ -62,21 +92,31 @@ contract MarketPlace {
         userProducts[_shop].push(item);
     }
 
-    function refillStore(address _shop, uint _productId, uint _amount) public payable AccessControl(Role.Market, _shop){
+    function showProductsSupl(uint _productId, address _supplier) public view returns(uint) {
+        return userProducts[_supplier][_productId].inStock;
+    }
+
+    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop){
         require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_productId < userProducts[_shop].length, "Invalid product ID");
+        require(_productId < userProducts[_supplier].length, "Invalid product ID");
 
         uint totalPrice;
         uint price;
-        string memory targetName = userProducts[_shop][_productId].name;
-
-        for(uint i = 0; i< userProducts[supplier].length; i++){
-            if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[supplier][i].name))){
-                price = userProducts[supplier][i].price;
+        string memory targetName = userProducts[_supplier][_productId].name;
+        //Payable, чё то не так. Надо отправлять эфир или нет 
+        for(uint i = 0; i< userProducts[_shop].length; i++){
+            if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[_shop][i].name))){
+                price = userProducts[_supplier][i].price;
                 totalPrice = price * _amount * 1 ether;
                 require(msg.value >= totalPrice, "Insufficient funds sent");
-                userProducts[supplier][i].inStock-=_amount;
-                userProducts[_shop][_productId].inStock += _amount;   
+                userProducts[_supplier][_productId].inStock-=_amount;
+                userProducts[_shop][i].inStock += _amount;   
+            }
+            else {
+                uint inStock = userProducts[_supplier][_productId].inStock;
+                uint expDate = userProducts[_supplier][_productId].expDate;
+                Product memory newItem = Product(inStock, price, targetName, expDate);
+                userProducts[_shop].push(newItem);
             }
         }
 
@@ -100,7 +140,7 @@ contract MarketPlace {
 
     }
 
-    function purchase(address _shop, uint _amount, uint _id, string memory _ref) public payable {
+    function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable {
         if (users[msg.sender].role == Role.User) {
             users[msg.sender] = User( Role.User, 0);
         }
