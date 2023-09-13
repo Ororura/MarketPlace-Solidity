@@ -6,166 +6,19 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_inStock",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					}
-				],
-				"name": "addItems",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_amount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_id",
+						"name": "_modulus",
 						"type": "uint256"
 					}
 				],
-				"name": "purchase",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "productId",
-						"type": "uint256"
-					}
-				],
-				"name": "showInStock",
+				"name": "randMod",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "showItems",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "inStock",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "price",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "name",
-								"type": "string"
-							}
-						],
-						"internalType": "struct Test.Product[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "userProducts",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "inStock",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "users",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "purchased",
-						"type": "uint256"
-					},
-					{
-						"internalType": "enum Test.Role",
-						"name": "role",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -200,11 +53,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0x300107a36800da6be4af04c4c715c273e6d9b11f6c53e50e7e3889f94e896acb",
+			"keccak256": "0x174dd0d374b697fae5b97447c23de99e66d1719dd12590b229a3bd989f2d903a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://36f3fb77e217a16eeaf205fb69b811e16b0270f9a8aa3d4a46286a2b2a657fd7",
-				"dweb:/ipfs/Qme47fZftAQnXHNHivuRBHHXg6tcHKNhT5G6eX9wu8tgXE"
+				"bzz-raw://5266d11c5687f408b5e7ca5d34731453b83909e92f7c28dc24fb2fd2d5166355",
+				"dweb:/ipfs/QmUJQrGJcsHpADubuUJ1QVZzPXZjZCqzyVxXtV1AWvQur6"
 			]
 		}
 	},

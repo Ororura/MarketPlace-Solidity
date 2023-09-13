@@ -36,8 +36,10 @@ contract MarketPlace {
         users[supplier] = User(Role.Supplier);
         Product memory item = Product(_inStock, _price / 2, _name);
         userProducts[msg.sender].push(item);
-        //TODO сделать поддержку 3х и боллее магазинов
     }
+
+    //Срок годности.
+    
 
     function makeMarket() public  {
         users[msg.sender] = User(Role.Market);
@@ -55,8 +57,6 @@ contract MarketPlace {
         uint totalPrice;
         uint price;
         string memory targetName = userProducts[_shop][_productId].name;
-
-        // targetName ВОЗВРАЩАЕТ НЕИЗВЕСТНО, ПРОВЕРИТЬ, В ЧЁМ ПРОБЛЕМА!!!!
 
         for(uint i = 0; i< userProducts[supplier].length; i++){
             if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[supplier][i].name))){

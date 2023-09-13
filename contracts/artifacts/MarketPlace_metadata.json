@@ -26,6 +26,11 @@
 						"internalType": "string",
 						"name": "_name",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_expDate",
+						"type": "uint256"
 					}
 				],
 				"name": "addItems",
@@ -49,6 +54,11 @@
 						"internalType": "string",
 						"name": "_name",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_expDate",
+						"type": "uint256"
 					}
 				],
 				"name": "addItemsSupplier",
@@ -102,6 +112,25 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_modulus",
+						"type": "uint256"
+					}
+				],
+				"name": "randMod",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_shop",
 						"type": "address"
@@ -118,6 +147,24 @@
 					}
 				],
 				"name": "refillStore",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_productId",
+						"type": "uint256"
+					}
+				],
+				"name": "refund",
 				"outputs": [],
 				"stateMutability": "payable",
 				"type": "function"
@@ -164,6 +211,11 @@
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expDate",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -202,7 +254,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlaceTest.sol": "MarketPlace"
+			"contracts/MarketPlace.sol": "MarketPlace"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -216,12 +268,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlaceTest.sol": {
-			"keccak256": "0xec83dc23f89a71881e75f5d1d54a880042b96e970958788b20883b130b010380",
+		"contracts/MarketPlace.sol": {
+			"keccak256": "0x4ea42c8428ccd4658662b9b3fe92796b604469f616907007ba5b2138710b6b3f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://71a54ad94d5814270f844f3d76fc901993373eb2e5a9bf0446301080b95c9bc1",
-				"dweb:/ipfs/QmNdsEmUbiL4nx8446fd9z7GjbzhyZ2idRnLyyD3vu3szi"
+				"bzz-raw://288ca6dcb0a06b262bb9c126b9ca1c2583b5f986dc10c89892d38d94c0da2a95",
+				"dweb:/ipfs/QmVzLt5tTF28QieEg2vJLK8LYAZxbatzXHj7AuXckR2W91"
 			]
 		}
 	},
