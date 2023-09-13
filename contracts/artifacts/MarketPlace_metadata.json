@@ -404,7 +404,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlaceTest.sol": "MarketPlace"
+			"contracts/MarketPlace.sol": "MarketPlace"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -418,12 +418,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlaceTest.sol": {
-			"keccak256": "0xbd2c2467e2e1fb28e0d0d88f1e7fc44bbe3588e15735b45560abc2a1fb2bb1ec",
+		"contracts/MarketPlace.sol": {
+			"keccak256": "0x714c8c3fe98250a10539a1966f5c5f0dfb543948e864f7ea30d8adcf9c654b2d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0b74bf217888798144c688ec50749b15983daf05d23ae09c59b302085a915590",
-				"dweb:/ipfs/QmX2j69wmexTTZPXgYA7QrB3Rtf3cJddexSM49ioYBxQiR"
+				"bzz-raw://a1c57d0e648eea476ea5695d2ed26eb526e9aa6307da1d09b1d79641f9fe0247",
+				"dweb:/ipfs/QmdjgZAC5VLLfskBKwdgvE1hQmmRSC7m2NwaGCQGzB28AC"
 			]
 		}
 	},

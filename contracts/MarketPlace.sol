@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: MIT
-
-// TODO: Сделать смену роли для пользователей. Сделать подтверждение смены роли 
  
 pragma solidity ^0.8.0;
 
@@ -57,8 +55,6 @@ contract MarketPlace {
     }
 
     function changeRole(Role _role) public{
-        // require(uint(users[msg.sender].role) >= 0);
-        // users[msg.sender].role = _role;
         tickets.push(Ticket(msg.sender, _role));
     }
 
@@ -92,43 +88,35 @@ contract MarketPlace {
         userProducts[_shop].push(item);
     }
 
+    function showProductsSupl(uint _productId, address _supplier) public view returns(uint) {
+        return userProducts[_supplier][_productId].inStock;
+    }
+
     function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop){
         require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_productId < userProducts[_shop].length, "Invalid product ID");
+        require(_productId < userProducts[_supplier].length, "Invalid product ID");
 
-        uint totalPrice;
-        uint price;
+        uint price = userProducts[_supplier][_productId].price;
+        uint totalPrice = price * _amount * 1 ether;
+
+        require(msg.value >= totalPrice, "Insufficient funds sent");
+        uint expDate = userProducts[_supplier][_productId].expDate ;
         string memory targetName = userProducts[_supplier][_productId].name;
+        bool productExists = false;
 
-        for(uint i = 0; i< userProducts[_supplier].length; i++){
+        for(uint i = 0; i< userProducts[_shop].length; i++){
             if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[_shop][i].name))){
-                price = userProducts[_supplier][i].price;
-                totalPrice = price * _amount * 1 ether;
-                require(msg.value >= totalPrice, "Insufficient funds sent");
-
-                        
-                bool productExists = false;
-                for (uint j = 0; j < userProducts[_shop].length; j++) {
-                    if (keccak256(bytes(userProducts[_shop][j].name)) == keccak256(bytes(userProducts[_supplier][_productId].name))) {
-                        userProducts[_shop][i].inStock += _amount;
-                        productExists = true;
-                        break; // Выходим из цикла, так как продукт найден
-                    }
-                }
-
-                // Если продукт не найден, добавляем его
-                if (!productExists) {
-
-                    //Реализовать генерацию чисел 
-                    Product memory newItem = Product(_amount, userProducts[_supplier][_productId].price, userProducts[_supplier][_productId].name, userProducts[_supplier][_productId].expDate);
-                    userProducts[msg.sender].push(newItem);
-                }
-
-
-                // userProducts[_supplier][i].inStock-=_amount;
-                // userProducts[_shop][_productId].inStock += _amount;   
+                userProducts[_shop][i].inStock += _amount;
+                productExists = true;   
             }
         }
+
+        if (!productExists){
+            Product memory newItem = Product(_amount, price, targetName, expDate);
+            userProducts[_shop].push(newItem);
+        }
+
+        userProducts[_supplier][_productId].inStock -= _amount;
 
         if (msg.value > totalPrice) {
             uint change = msg.value - totalPrice;
@@ -166,21 +154,16 @@ contract MarketPlace {
             referrals[_ref] = address(0);
         }
         require(msg.value >= totalPrice, "Insufficient funds sent");
-
-        // Проверяем наличие продукта у пользователя
         bool productExists = false;
         for (uint i = 0; i < userProducts[msg.sender].length; i++) {
             if (keccak256(bytes(userProducts[msg.sender][i].name)) == keccak256(bytes(userProducts[_shop][_id].name))) {
                 userProducts[msg.sender][i].inStock += _amount;
                 productExists = true;
-                break; // Выходим из цикла, так как продукт найден
+                break; 
             }
         }
 
-        // Если продукт не найден, добавляем его
         if (!productExists) {
-
-            //Реализовать генерацию чисел 
             Product memory newItem = Product(_amount, userProducts[_shop][_id].price, userProducts[_shop][_id].name, randMod(1000));
             userProducts[msg.sender].push(newItem);
         }
