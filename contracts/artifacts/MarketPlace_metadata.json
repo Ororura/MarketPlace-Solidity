@@ -67,6 +67,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_nameRef",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "genRef",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "makeMarket",
 				"outputs": [],
@@ -102,6 +120,11 @@
 						"internalType": "uint256",
 						"name": "_id",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_ref",
+						"type": "string"
 					}
 				],
 				"name": "purchase",
@@ -123,6 +146,25 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "referrals",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -272,7 +314,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlace.sol": "MarketPlace"
+			"contracts/MarketPlaceTest.sol": "MarketPlace"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -286,12 +328,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlace.sol": {
-			"keccak256": "0x84801abf0e69e40658693a3a073451b7e73a30b67a43e7cfc3143a0b5346c7c9",
+		"contracts/MarketPlaceTest.sol": {
+			"keccak256": "0xcb681cd9777f4b1c8de294ae0f5b5afe04a352a1168e78a1a1713120ab7fe199",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://43b2d3a7da204e44c07d910c3a4ab794ce98a1e77413a0742ef33c13085927c4",
-				"dweb:/ipfs/QmQmUcUiKJD496wXREBJ5ryyBJrpgKrLW4Mg3RJ9phZRnF"
+				"bzz-raw://09b95bdcf539d36fc6dda6e6baa847f5406cc68a1c007ffb74bc373f7fc740e0",
+				"dweb:/ipfs/QmPKR5YwdRmnCkhswGiPwBVPZR7cJmbFvpM6UX8GMmPuuk"
 			]
 		}
 	},

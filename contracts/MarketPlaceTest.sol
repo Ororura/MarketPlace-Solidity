@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-//TODO добавить поставщика
-// Поставщик->Магазин->Пользователь*2
+// TODO: Сделать рефералку. Пользователь генерирует реферальный код, 
+// который может использовать другой определенно-заданный пользователь только один раз. Скидка 10%
  
 pragma solidity ^0.8.0;
 
@@ -12,16 +12,19 @@ contract MarketPlace {
 
     struct User {
         Role role;
+        uint balance;
     }
 
     struct Product {
         uint inStock;
         uint price;
         string name;
+        uint expDate;
     }
 
     mapping(address => User) public users;
     mapping(address => Product[]) public userProducts;
+    mapping(string => address) public referrals;
 
     
     modifier AccessControl(Role _role, address _shop){
@@ -30,23 +33,32 @@ contract MarketPlace {
         _;
     }
 
-
-    function addItemsSupplier(uint _inStock, uint _price, string calldata _name) public{
-        supplier = msg.sender;
-        users[supplier] = User(Role.Supplier);
-        Product memory item = Product(_inStock, _price / 2, _name);
-        userProducts[msg.sender].push(item);
+    function randMod(uint _modulus) public view returns(uint)
+    {   
+        uint randNonce;
+        randNonce++;
+        return uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % _modulus;
     }
 
-    //Срок годности.
+    function genRef(string memory _nameRef, address _user) public{
+        require(msg.sender != _user);
+        referrals[_nameRef] = _user;
+    } 
+
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate) public{
+        supplier = msg.sender;
+        users[supplier] = User(Role.Supplier, 0);
+        Product memory item = Product(_inStock, _price / 2, _name, _expDate);
+        userProducts[msg.sender].push(item);
+    }
     
 
     function makeMarket() public  {
-        users[msg.sender] = User(Role.Market);
+        users[msg.sender] = User(Role.Market, 0);
     }
     
-    function addItems(address _shop, uint _inStock, uint _price, string calldata _name) public AccessControl(Role.Market, _shop) {
-        Product memory item = Product(_inStock, _price, _name);
+    function addItems(address _shop, uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market, _shop) {
+        Product memory item = Product(_inStock, _price, _name, _expDate);
         userProducts[_shop].push(item);
     }
 
@@ -75,9 +87,22 @@ contract MarketPlace {
 
     }
 
-    function purchase(address _shop, uint _amount, uint _id) public payable {
+    function refund(address _shop, uint _productId) public {
+        uint userExp = userProducts[msg.sender][_productId].expDate;
+        uint shopExp = userProducts[_shop][_productId].expDate;
+        require(userExp > shopExp);
+        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * userProducts[_shop][_productId].price * 1 ether;
+        userProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
+        delete userProducts[msg.sender][_productId];
+        users[_shop].balance -= totalRefSum;
+        payable(msg.sender).transfer(totalRefSum);
+
+
+    }
+
+    function purchase(address _shop, uint _amount, uint _id, string memory _ref) public payable {
         if (users[msg.sender].role == Role.User) {
-            users[msg.sender] = User( Role.User);
+            users[msg.sender] = User( Role.User, 0);
         }
         
         require(_amount > 0, "Purchase amount must be greater than 0");
@@ -85,6 +110,11 @@ contract MarketPlace {
         require(_amount <= userProducts[_shop][_id].inStock, "Not enough stock available");
 
         uint totalPrice = _amount * userProducts[_shop][_id].price * 1 ether;
+
+        if (referrals[_ref] == msg.sender) {
+            totalPrice = (totalPrice * 90 / 100);
+            referrals[_ref] = address(0);
+        }
         require(msg.value >= totalPrice, "Insufficient funds sent");
 
         // Проверяем наличие продукта у пользователя
@@ -97,9 +127,11 @@ contract MarketPlace {
             }
         }
 
+        // Если продукт не найден, добавляем его
         if (!productExists) {
-            // Если продукт не найден, добавляем его
-            Product memory newItem = Product(_amount, userProducts[_shop][_id].price, userProducts[_shop][_id].name);
+
+            //Реализовать генерацию чисел 
+            Product memory newItem = Product(_amount, userProducts[_shop][_id].price, userProducts[_shop][_id].name, randMod(1000));
             userProducts[msg.sender].push(newItem);
         }
 
@@ -109,9 +141,12 @@ contract MarketPlace {
             uint change = msg.value - totalPrice;
             payable(msg.sender).transfer(change);
         }
+        users[_shop].balance = totalPrice;
 
-        uint balance = address(this).balance;
-        payable(_shop).transfer(balance);
         }
 
+    function withdrawBal(address _shop) public {
+        uint balance = users[_shop].balance;
+        payable(_shop).transfer(balance);
+    }
 }
