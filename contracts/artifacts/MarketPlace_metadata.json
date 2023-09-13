@@ -166,7 +166,7 @@
 				],
 				"name": "refund",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -235,9 +235,27 @@
 						"internalType": "enum MarketPlace.Role",
 						"name": "role",
 						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					}
+				],
+				"name": "withdrawBal",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -269,11 +287,11 @@
 	},
 	"sources": {
 		"contracts/MarketPlace.sol": {
-			"keccak256": "0x4ea42c8428ccd4658662b9b3fe92796b604469f616907007ba5b2138710b6b3f",
+			"keccak256": "0x84801abf0e69e40658693a3a073451b7e73a30b67a43e7cfc3143a0b5346c7c9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://288ca6dcb0a06b262bb9c126b9ca1c2583b5f986dc10c89892d38d94c0da2a95",
-				"dweb:/ipfs/QmVzLt5tTF28QieEg2vJLK8LYAZxbatzXHj7AuXckR2W91"
+				"bzz-raw://43b2d3a7da204e44c07d910c3a4ab794ce98a1e77413a0742ef33c13085927c4",
+				"dweb:/ipfs/QmQmUcUiKJD496wXREBJ5ryyBJrpgKrLW4Mg3RJ9phZRnF"
 			]
 		}
 	},

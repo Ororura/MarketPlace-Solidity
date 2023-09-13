@@ -11,6 +11,7 @@ contract MarketPlace {
 
     struct User {
         Role role;
+        uint balance;
     }
 
     struct Product {
@@ -39,14 +40,14 @@ contract MarketPlace {
 
     function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate) public{
         supplier = msg.sender;
-        users[supplier] = User(Role.Supplier);
+        users[supplier] = User(Role.Supplier, 0);
         Product memory item = Product(_inStock, _price / 2, _name, _expDate);
         userProducts[msg.sender].push(item);
     }
     
 
     function makeMarket() public  {
-        users[msg.sender] = User(Role.Market);
+        users[msg.sender] = User(Role.Market, 0);
     }
     
     function addItems(address _shop, uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market, _shop) {
@@ -79,19 +80,22 @@ contract MarketPlace {
 
     }
 
-    function refund(address _shop, uint _productId) public payable {
+    function refund(address _shop, uint _productId) public {
         uint userExp = userProducts[msg.sender][_productId].expDate;
         uint shopExp = userProducts[_shop][_productId].expDate;
         require(userExp > shopExp);
         uint totalRefSum =  userProducts[msg.sender][_productId].inStock * userProducts[_shop][_productId].price * 1 ether;
+        userProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
         delete userProducts[msg.sender][_productId];
+        users[_shop].balance -= totalRefSum;
         payable(msg.sender).transfer(totalRefSum);
+
 
     }
 
     function purchase(address _shop, uint _amount, uint _id) public payable {
         if (users[msg.sender].role == Role.User) {
-            users[msg.sender] = User( Role.User);
+            users[msg.sender] = User( Role.User, 0);
         }
         
         require(_amount > 0, "Purchase amount must be greater than 0");
@@ -125,9 +129,12 @@ contract MarketPlace {
             uint change = msg.value - totalPrice;
             payable(msg.sender).transfer(change);
         }
-        
-        uint balance = address(this).balance;
-        payable(_shop).transfer(balance);
+        users[_shop].balance = totalPrice;
+
         }
 
+    function withdrawBal(address _shop) public {
+        uint balance = users[_shop].balance;
+        payable(_shop).transfer(balance);
+    }
 }
