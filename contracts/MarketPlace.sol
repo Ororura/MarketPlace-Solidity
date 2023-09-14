@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
  
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 
 contract MarketPlace {
     enum Role { User, Market, Supplier }
+
     Ticket[] public tickets;
     address public owner;
 
-    constructor(){
+    constructor() {
         owner = msg.sender;
     }
 
@@ -39,27 +40,35 @@ contract MarketPlace {
     }
     
     modifier AccessControl(Role _role, address _shop){
-        require(users[msg.sender].role == _role, unicode"");
+        require(users[msg.sender].role == _role, unicode"Ваша роль не позволяет это изменять");
         require(msg.sender == _shop, unicode"Магазин не соответсвует отправителю");
         _;
     }
+
 
     function makeUser() public {
         users[msg.sender] = User(Role.User, 0);
     }
 
-    function approveChangeRole(uint _idTicket) public OnlyOwner{
+    function makeSupplier() public {
+        users[msg.sender] = User(Role.Supplier, 0);
+    }
+
+    function makeMarket() public  {
+        users[msg.sender] = User(Role.Market, 0);
+    }
+
+    function approveChangeRole(uint _idTicket) public OnlyOwner {
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
         users[userAddr].role = changedRole;
     }
 
-    function changeRole(Role _role) public{
+    function changeRole(Role _role) public {
         tickets.push(Ticket(msg.sender, _role));
     }
 
-    function randMod(uint _modulus) public view returns(uint)
-    {   
+    function randMod(uint _modulus) public view returns(uint) {   
         uint randNonce;
         randNonce++;
         return uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % _modulus;
@@ -75,67 +84,44 @@ contract MarketPlace {
         userProducts[_addressSupp].push(item);
     }
     
-    function makeSupplier() public {
-        users[msg.sender] = User(Role.Supplier, 0);
-    }
 
-    function makeMarket() public  {
-        users[msg.sender] = User(Role.Market, 0);
-    }
-    
-    function addItems(address _shop, uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market, _shop) {
-        Product memory item = Product(_inStock, _price, _name, _expDate);
-        userProducts[_shop].push(item);
-    }
-
-    function showProductsSupl(uint _productId, address _supplier) public view returns(uint) {
-        return userProducts[_supplier][_productId].inStock;
-    }
-
-    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop){
+    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop) {
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < userProducts[_supplier].length, "Invalid product ID");
-
         uint price = userProducts[_supplier][_productId].price;
         uint totalPrice = price * _amount * 1 ether;
-
         require(msg.value >= totalPrice, "Insufficient funds sent");
-        uint expDate = userProducts[_supplier][_productId].expDate ;
         string memory targetName = userProducts[_supplier][_productId].name;
         bool productExists = false;
 
         for(uint i = 0; i< userProducts[_shop].length; i++){
             if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[_shop][i].name))){
                 userProducts[_shop][i].inStock += _amount;
-                productExists = true;   
+                productExists = true;
+                break;   
             }
         }
 
         if (!productExists){
-            Product memory newItem = Product(_amount, price, targetName, expDate);
+            Product memory newItem = Product(_amount, price, targetName, userProducts[_supplier][_productId].expDate);
             userProducts[_shop].push(newItem);
         }
 
         userProducts[_supplier][_productId].inStock -= _amount;
 
         if (msg.value > totalPrice) {
-            uint change = msg.value - totalPrice;
-            payable(msg.sender).transfer(change);
+            payable(msg.sender).transfer(msg.value - totalPrice);
         }
 
     }
 
     function refund(address _shop, uint _productId) public {
-        uint userExp = userProducts[msg.sender][_productId].expDate;
-        uint shopExp = userProducts[_shop][_productId].expDate;
-        require(userExp > shopExp);
+        require(userProducts[msg.sender][_productId].expDate > userProducts[_shop][_productId].expDate);
         uint totalRefSum =  userProducts[msg.sender][_productId].inStock * userProducts[_shop][_productId].price * 1 ether;
         userProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
         delete userProducts[msg.sender][_productId];
         users[_shop].balance -= totalRefSum;
         payable(msg.sender).transfer(totalRefSum);
-
-
     }
 
     function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable {
@@ -153,8 +139,10 @@ contract MarketPlace {
             totalPrice = (totalPrice * 90 / 100);
             referrals[_ref] = address(0);
         }
+
         require(msg.value >= totalPrice, "Insufficient funds sent");
         bool productExists = false;
+
         for (uint i = 0; i < userProducts[msg.sender].length; i++) {
             if (keccak256(bytes(userProducts[msg.sender][i].name)) == keccak256(bytes(userProducts[_shop][_id].name))) {
                 userProducts[msg.sender][i].inStock += _amount;
@@ -169,17 +157,14 @@ contract MarketPlace {
         }
 
         userProducts[_shop][_id].inStock -= _amount;
-
-        if (msg.value > totalPrice) {
-            uint change = msg.value - totalPrice;
-            payable(msg.sender).transfer(change);
-        }
         users[_shop].balance = totalPrice;
 
+        if (msg.value > totalPrice) {
+            payable(msg.sender).transfer(msg.value - totalPrice);
         }
+    }
 
     function withdrawBal(address _shop) public {
-        uint balance = users[_shop].balance;
-        payable(_shop).transfer(balance);
+        payable(_shop).transfer(users[_shop].balance);
     }
 }

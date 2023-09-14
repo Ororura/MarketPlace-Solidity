@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.18+commit.87f61d96"
+		"version": "0.8.21+commit.d9974bed"
 	},
 	"language": "Solidity",
 	"output": {
@@ -9,39 +9,6 @@
 				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_shop",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_inStock",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_expDate",
-						"type": "uint256"
-					}
-				],
-				"name": "addItems",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			},
 			{
 				"inputs": [
@@ -270,30 +237,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_productId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "_supplier",
-						"type": "address"
-					}
-				],
-				"name": "showProductsSupl",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					}
@@ -406,7 +349,7 @@
 		"compilationTarget": {
 			"contracts/MarketPlace.sol": "MarketPlace"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -419,11 +362,11 @@
 	},
 	"sources": {
 		"contracts/MarketPlace.sol": {
-			"keccak256": "0x714c8c3fe98250a10539a1966f5c5f0dfb543948e864f7ea30d8adcf9c654b2d",
+			"keccak256": "0x2070bd4bbd5d48e1704d6fe98181ca0474310772796438aa68de93899dfe714c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a1c57d0e648eea476ea5695d2ed26eb526e9aa6307da1d09b1d79641f9fe0247",
-				"dweb:/ipfs/QmdjgZAC5VLLfskBKwdgvE1hQmmRSC7m2NwaGCQGzB28AC"
+				"bzz-raw://6b9b564c2517106e9202a3cd45d28ae29dfc66aaf6d21ef48dfcaa6c6e395bc9",
+				"dweb:/ipfs/QmNNABeJDFyMQpBesgdKASWMFkC8dMKLRvhzNXETMdFDbd"
 			]
 		}
 	},
