@@ -125,6 +125,45 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "productItems",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "inStock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expDate",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_shop",
 						"type": "address"
 					},
@@ -347,7 +386,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlace.sol": "MarketPlace"
+			"contracts/Test.sol": "MarketPlace"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -361,12 +400,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlace.sol": {
-			"keccak256": "0x2070bd4bbd5d48e1704d6fe98181ca0474310772796438aa68de93899dfe714c",
+		"contracts/Test.sol": {
+			"keccak256": "0xdbe0fce224c1496e5ff2d98088cf03e6b75b508a294585964cb738c13b8a5195",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6b9b564c2517106e9202a3cd45d28ae29dfc66aaf6d21ef48dfcaa6c6e395bc9",
-				"dweb:/ipfs/QmNNABeJDFyMQpBesgdKASWMFkC8dMKLRvhzNXETMdFDbd"
+				"bzz-raw://78fc862000a94d9df3bbb8a216ed68023d2ed4a8bef7c8ce0905b669208884da",
+				"dweb:/ipfs/QmS8MLxiscwvkMJ1fb33ZK4M9AE5Eoi9DZtSYDZap8kngE"
 			]
 		}
 	},
