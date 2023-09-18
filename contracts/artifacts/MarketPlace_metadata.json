@@ -109,19 +109,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -134,8 +121,13 @@
 						"type": "uint256"
 					}
 				],
-				"name": "productItems",
+				"name": "marketProducts",
 				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
 						"name": "inStock",
@@ -155,6 +147,19 @@
 						"internalType": "uint256",
 						"name": "expDate",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -275,6 +280,50 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "supplierProducts",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "inStock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expDate",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -311,6 +360,11 @@
 				],
 				"name": "userProducts",
 				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
 						"name": "inStock",
@@ -401,11 +455,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0xdbe0fce224c1496e5ff2d98088cf03e6b75b508a294585964cb738c13b8a5195",
+			"keccak256": "0xa1a7c2afd629456bf178e22b57a6db55008817bb5ede2231e92d1e7fbcf9d241",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://78fc862000a94d9df3bbb8a216ed68023d2ed4a8bef7c8ce0905b669208884da",
-				"dweb:/ipfs/QmS8MLxiscwvkMJ1fb33ZK4M9AE5Eoi9DZtSYDZap8kngE"
+				"bzz-raw://304534644bcf58857d8cc7ddd758bd485c21b774714e06781b7adf13cc4fe9c0",
+				"dweb:/ipfs/QmYtMsFu1fDRxqqNm5G4duCcASL2QZAX419WfJ9rJ8Rs6j"
 			]
 		}
 	},

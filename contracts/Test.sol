@@ -23,7 +23,9 @@ contract MarketPlace {
         uint balance;
     }
 
+    // Сделать маппинги ролей и взаимодествовать только с ними
     struct Product {
+        address userAddress;
         uint inStock;
         uint price;
         string name;
@@ -33,8 +35,9 @@ contract MarketPlace {
 
     mapping(address => User) public users;
     mapping(address => Product[]) public userProducts;
+    mapping(address => Product[]) public marketProducts;
+    mapping(address => Product[]) public supplierProducts;
     mapping(string => address) public referrals;
-    mapping(address => Product[]) public productItems;
 
 
     modifier OnlyOwner(){
@@ -52,9 +55,6 @@ contract MarketPlace {
 
     function makeUser() public {
         users[msg.sender] = User(Role.User, 0);
-        productItems[msg.sender].push(Product(13, 0, " ", 0));
-        productItems[msg.sender].push(Product(28, 0, " ", 0));
-        productItems[msg.sender].push(Product(52, 0, " ", 0));
     }
 
     function makeSupplier() public {
@@ -69,7 +69,7 @@ contract MarketPlace {
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
         users[userAddr].role = changedRole;
-        userProducts[msg.sender][0] = productItems[msg.sender][uint(changedRole)];
+        // userProducts[userAddr][0] = productArrayItems[userAddr][1];
     }
 
     function changeRole(Role _role) public {
@@ -88,34 +88,34 @@ contract MarketPlace {
     } 
 
     function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier, _addressSupp) {
-        Product memory item = Product(_inStock, _price / 2, _name, _expDate);
-        userProducts[_addressSupp].push(item);
+        Product memory item = Product(_addressSupp, _inStock, _price / 2, _name, _expDate);
+        supplierProducts[_addressSupp].push(item);
     }
     
 
     function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop) {
         require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_productId < userProducts[_supplier].length, "Invalid product ID");
-        uint price = userProducts[_supplier][_productId].price;
+        require(_productId < supplierProducts[_supplier].length, "Invalid product ID");
+        uint price = supplierProducts[_supplier][_productId].price;
         uint totalPrice = price * _amount * 1 ether;
         require(msg.value >= totalPrice, "Insufficient funds sent");
-        string memory targetName = userProducts[_supplier][_productId].name;
+        string memory targetName = supplierProducts[_supplier][_productId].name;
         bool productExists = false;
 
-        for(uint i = 0; i< userProducts[_shop].length; i++){
-            if (keccak256(bytes(targetName)) == keccak256(bytes(userProducts[_shop][i].name))){
-                userProducts[_shop][i].inStock += _amount;
+        for(uint i = 0; i< marketProducts[_shop].length; i++){
+            if (keccak256(bytes(targetName)) == keccak256(bytes(marketProducts[_shop][i].name))){
+                marketProducts[_shop][i].inStock += _amount;
                 productExists = true;
                 break;   
             }
         }
 
         if (!productExists){
-            Product memory newItem = Product(_amount, price, targetName, userProducts[_supplier][_productId].expDate);
-            userProducts[_shop].push(newItem);
+            Product memory newItem = Product(_supplier, _amount, price, targetName, supplierProducts[_supplier][_productId].expDate);
+            marketProducts[_shop].push(newItem);
         }
 
-        userProducts[_supplier][_productId].inStock -= _amount;
+        supplierProducts[_supplier][_productId].inStock -= _amount;
 
         if (msg.value > totalPrice) {
             payable(msg.sender).transfer(msg.value - totalPrice);
@@ -124,9 +124,9 @@ contract MarketPlace {
     }
 
     function refund(address _shop, uint _productId) public {
-        require(userProducts[msg.sender][_productId].expDate > userProducts[_shop][_productId].expDate);
-        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * userProducts[_shop][_productId].price * 1 ether;
-        userProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
+        require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
+        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price * 1 ether;
+        marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
         delete userProducts[msg.sender][_productId];
         users[_shop].balance -= totalRefSum;
         payable(msg.sender).transfer(totalRefSum);
@@ -138,10 +138,10 @@ contract MarketPlace {
         }
         
         require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_id < userProducts[_shop].length, "Invalid product ID");
-        require(_amount <= userProducts[_shop][_id].inStock, "Not enough stock available");
+        require(_id < marketProducts[_shop].length, "Invalid product ID");
+        require(_amount <= marketProducts[_shop][_id].inStock, "Not enough stock available");
 
-        uint totalPrice = _amount * userProducts[_shop][_id].price * 1 ether;
+        uint totalPrice = _amount * marketProducts[_shop][_id].price * 1 ether;
 
         if (referrals[_ref] == msg.sender) {
             totalPrice = (totalPrice * 90 / 100);
@@ -160,11 +160,11 @@ contract MarketPlace {
         }
 
         if (!productExists) {
-            Product memory newItem = Product(_amount, userProducts[_shop][_id].price, userProducts[_shop][_id].name, randMod(1000));
+            Product memory newItem = Product(msg.sender, _amount, marketProducts[_shop][_id].price, marketProducts[_shop][_id].name, randMod(1000));
             userProducts[msg.sender].push(newItem);
         }
 
-        userProducts[_shop][_id].inStock -= _amount;
+        marketProducts[_shop][_id].inStock -= _amount;
         users[_shop].balance = totalPrice;
 
         if (msg.value > totalPrice) {
