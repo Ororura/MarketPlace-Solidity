@@ -31,6 +31,34 @@
 						"internalType": "uint256",
 						"name": "_expDate",
 						"type": "uint256"
+					}
+				],
+				"name": "addItemsMarket",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_inStock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_expDate",
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -83,6 +111,29 @@
 					}
 				],
 				"name": "genRef",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_shop",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_productId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "makeDelivery",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -348,6 +399,25 @@
 			{
 				"inputs": [
 					{
+						"internalType": "string",
+						"name": "input",
+						"type": "string"
+					}
+				],
+				"name": "toUpper",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
@@ -455,11 +525,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0xa1a7c2afd629456bf178e22b57a6db55008817bb5ede2231e92d1e7fbcf9d241",
+			"keccak256": "0xb40fb843140bf4fbe7e192f8c3edd5a59f065105953623664ef0bcba2158ebca",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://304534644bcf58857d8cc7ddd758bd485c21b774714e06781b7adf13cc4fe9c0",
-				"dweb:/ipfs/QmYtMsFu1fDRxqqNm5G4duCcASL2QZAX419WfJ9rJ8Rs6j"
+				"bzz-raw://58b89da7877704769621cb89185afbe96528998e9da0cd366901bd73f4467f31",
+				"dweb:/ipfs/QmUkFdtVh2wwyQExViKMBjAFpXzWr2vBzygBcZD9rc4g8p"
 			]
 		}
 	},

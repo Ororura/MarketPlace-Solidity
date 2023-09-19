@@ -4,6 +4,7 @@ pragma solidity ^0.8.21;
 
 contract MarketPlace {
     enum Role { User, Market, Supplier }
+    enum Status { Created, Prepairing, Canceled, Complete}
 
     
     Ticket[] public tickets;
@@ -11,6 +12,14 @@ contract MarketPlace {
 
     constructor() {
         owner = msg.sender;
+    }
+
+    struct DeliveryOrder {
+        address userAddr;
+        Status status;
+        string trackNumber;
+        uint productId;
+        uint amount;
     }
 
     struct Ticket {
@@ -38,6 +47,7 @@ contract MarketPlace {
     mapping(address => Product[]) public marketProducts;
     mapping(address => Product[]) public supplierProducts;
     mapping(string => address) public referrals;
+    mapping(address => DeliveryOrder[]) deliveryOrders;
 
 
     modifier OnlyOwner(){
@@ -82,14 +92,41 @@ contract MarketPlace {
         return uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % _modulus;
     }
 
+    function toUpper(string memory input) public pure returns (string memory) {
+        bytes memory inputBytes = bytes(input);
+        for (uint256 i = 0; i < inputBytes.length; i++) {
+            // Check if the character is a lowercase letter (ASCII value 97 to 122).
+            if (uint8(inputBytes[i]) >= 97 && uint8(inputBytes[i]) <= 122) {
+                // Convert the lowercase letter to uppercase by subtracting 32 from its ASCII value.
+                inputBytes[i] = bytes1(uint8(inputBytes[i]) - 32);
+            }
+        }
+        return string(inputBytes);
+    }
+
     function genRef(string memory _nameRef, address _user) public {
         require(msg.sender != _user);
         referrals[_nameRef] = _user;
     } 
 
+    function makeDelivery(address _shop, uint _productId, uint _amount) public {
+        require(_amount > 0, "Purchase amount must be greater than 0");
+        require(_productId < marketProducts[_shop].length, "Invalid product ID");
+        string memory productName = marketProducts[_shop][_productId].name;
+        string memory trackNumber = string.concat("AA",productName,"BB");
+        trackNumber = toUpper(trackNumber);
+        DeliveryOrder memory order = DeliveryOrder(msg.sender, Status.Prepairing, trackNumber, _productId, _amount);
+        deliveryOrders[msg.sender].push(order);
+    }
+
     function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier, _addressSupp) {
         Product memory item = Product(_addressSupp, _inStock, _price / 2, _name, _expDate);
         supplierProducts[_addressSupp].push(item);
+    }
+
+    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public {
+        Product memory item = Product(msg.sender, _inStock, _price / 2, _name, _expDate);
+        marketProducts[msg.sender].push(item);
     }
     
 
