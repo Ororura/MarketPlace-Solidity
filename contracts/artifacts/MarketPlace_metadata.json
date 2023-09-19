@@ -13,6 +13,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "_status",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_deliveryId",
+						"type": "uint256"
+					}
+				],
+				"name": "acceptDelivery",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "_inStock",
 						"type": "uint256"
@@ -87,6 +105,29 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "_status",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_deliveryId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "approveDelivery",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "enum MarketPlace.Role",
 						"name": "_role",
 						"type": "uint8"
@@ -95,6 +136,50 @@
 				"name": "changeRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "deliveryOrders",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "shop",
+						"type": "address"
+					},
+					{
+						"internalType": "enum MarketPlace.Status",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "trackNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "productId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -525,11 +610,11 @@
 	},
 	"sources": {
 		"contracts/Test.sol": {
-			"keccak256": "0xb40fb843140bf4fbe7e192f8c3edd5a59f065105953623664ef0bcba2158ebca",
+			"keccak256": "0xf5b5c297c8f67ef11fddd3099390a5ec1c9427808102a7f5fcc7b39a9c4557b7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://58b89da7877704769621cb89185afbe96528998e9da0cd366901bd73f4467f31",
-				"dweb:/ipfs/QmUkFdtVh2wwyQExViKMBjAFpXzWr2vBzygBcZD9rc4g8p"
+				"bzz-raw://86a0e34810f4f92d7a677646db81cba27bb3e74f72b050471c7cafde5e553a8b",
+				"dweb:/ipfs/QmRXa9VAD1MJnjQw6kEb1Hhn9rgi6KNLjXbnYs2MLFFKGM"
 			]
 		}
 	},

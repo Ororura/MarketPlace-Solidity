@@ -9,6 +9,7 @@ contract MarketPlace {
     
     Ticket[] public tickets;
     address public owner;
+    DeliveryOrder[] public deliveryOrders;
 
     constructor() {
         owner = msg.sender;
@@ -16,6 +17,7 @@ contract MarketPlace {
 
     struct DeliveryOrder {
         address userAddr;
+        address shop;
         Status status;
         string trackNumber;
         uint productId;
@@ -47,7 +49,9 @@ contract MarketPlace {
     mapping(address => Product[]) public marketProducts;
     mapping(address => Product[]) public supplierProducts;
     mapping(string => address) public referrals;
-    mapping(address => DeliveryOrder[]) deliveryOrders;
+    // mapping(address => DeliveryOrder[]) deliveryOrders;
+
+    
 
 
     modifier OnlyOwner(){
@@ -95,9 +99,7 @@ contract MarketPlace {
     function toUpper(string memory input) public pure returns (string memory) {
         bytes memory inputBytes = bytes(input);
         for (uint256 i = 0; i < inputBytes.length; i++) {
-            // Check if the character is a lowercase letter (ASCII value 97 to 122).
             if (uint8(inputBytes[i]) >= 97 && uint8(inputBytes[i]) <= 122) {
-                // Convert the lowercase letter to uppercase by subtracting 32 from its ASCII value.
                 inputBytes[i] = bytes1(uint8(inputBytes[i]) - 32);
             }
         }
@@ -115,8 +117,27 @@ contract MarketPlace {
         string memory productName = marketProducts[_shop][_productId].name;
         string memory trackNumber = string.concat("AA",productName,"BB");
         trackNumber = toUpper(trackNumber);
-        DeliveryOrder memory order = DeliveryOrder(msg.sender, Status.Prepairing, trackNumber, _productId, _amount);
-        deliveryOrders[msg.sender].push(order);
+        DeliveryOrder memory order = DeliveryOrder(msg.sender, _shop, Status.Prepairing, trackNumber, _productId, _amount);
+        deliveryOrders.push(order);
+    }
+
+    function approveDelivery(bool _status, uint _deliveryId, address ) public {
+        if (_status) {
+            deliveryOrders[_deliveryId].status = Status.Prepairing;
+        }
+        else {
+            deliveryOrders[_deliveryId].status = Status.Canceled;
+        }
+    }
+
+    function acceptDelivery(bool _status, uint _deliveryId) public payable {
+        require(deliveryOrders[_deliveryId].status == Status.Prepairing);
+        if (_status) { 
+            purchase(deliveryOrders[_deliveryId].shop, deliveryOrders[_deliveryId].amount, _deliveryId, "");
+        }
+        else {
+            deliveryOrders[_deliveryId].status == Status.Canceled;
+        }
     }
 
     function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier, _addressSupp) {
