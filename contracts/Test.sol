@@ -34,7 +34,6 @@ contract MarketPlace {
         uint balance;
     }
 
-    // Сделать маппинги ролей и взаимодествовать только с ними
     struct Product {
         address userAddress;
         uint inStock;
@@ -48,10 +47,7 @@ contract MarketPlace {
     mapping(address => Product[]) public userProducts;
     mapping(address => Product[]) public marketProducts;
     mapping(address => Product[]) public supplierProducts;
-    mapping(string => address) public referrals;
-    // mapping(address => DeliveryOrder[]) deliveryOrders;
-
-    
+    mapping(string => address) public referrals;    
 
 
     modifier OnlyOwner(){
@@ -60,12 +56,10 @@ contract MarketPlace {
     }
     
     modifier AccessControl(Role _role, address _shop){
-        require(users[msg.sender].role == _role, unicode"Ваша роль не позволяет это изменять");
-        require(msg.sender == _shop, unicode"Магазин не соответсвует отправителю");
+        require(users[msg.sender].role == _role, "Your role does not allow this change");
+        require(msg.sender == _shop, "The shop does not match the sender");
         _;
     }
-
-    // Делать юзера и после делать тикет на смену роли. Вместе с юзером пушить 3 структуры для ролей
 
     function makeUser() public {
         users[msg.sender] = User(Role.User, 0);
@@ -83,7 +77,6 @@ contract MarketPlace {
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
         users[userAddr].role = changedRole;
-        // userProducts[userAddr][0] = productArrayItems[userAddr][1];
     }
 
     function changeRole(Role _role) public {
@@ -121,7 +114,7 @@ contract MarketPlace {
         deliveryOrders.push(order);
     }
 
-    function approveDelivery(bool _status, uint _deliveryId, address ) public {
+    function approveDelivery(bool _status, uint _deliveryId) public AccessControl(Role.Market, msg.sender) {
         if (_status) {
             deliveryOrders[_deliveryId].status = Status.Prepairing;
         }
@@ -130,7 +123,7 @@ contract MarketPlace {
         }
     }
 
-    function acceptDelivery(bool _status, uint _deliveryId) public payable {
+    function acceptDelivery(bool _status, uint _deliveryId) public payable AccessControl(Role.User, msg.sender) {
         require(deliveryOrders[_deliveryId].status == Status.Prepairing);
         if (_status) { 
             purchase(deliveryOrders[_deliveryId].shop, deliveryOrders[_deliveryId].amount, _deliveryId, "");
@@ -145,8 +138,8 @@ contract MarketPlace {
         supplierProducts[_addressSupp].push(item);
     }
 
-    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public {
-        Product memory item = Product(msg.sender, _inStock, _price / 2, _name, _expDate);
+    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market, msg.sender) {
+        Product memory item = Product(msg.sender, _inStock, _price, _name, _expDate);
         marketProducts[msg.sender].push(item);
     }
     
@@ -223,7 +216,7 @@ contract MarketPlace {
         }
 
         marketProducts[_shop][_id].inStock -= _amount;
-        users[_shop].balance = totalPrice;
+        users[_shop].balance += totalPrice;
 
         if (msg.value > totalPrice) {
             payable(msg.sender).transfer(msg.value - totalPrice);

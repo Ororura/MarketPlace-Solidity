@@ -1,0 +1,60 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "6080604052348015600e575f80fd5b50603e80601a5f395ff3fe60806040525f80fdfea2646970667358221220a2ea56faa5ac16901fe44d53c84cc0b161eb66f2ef8bde06442e314e8804397064736f6c63430008150033",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xE JUMPI PUSH0 DUP1 REVERT JUMPDEST POP PUSH1 0x3E DUP1 PUSH1 0x1A PUSH0 CODECOPY PUSH0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 LOG2 0xEA JUMP STATICCALL 0xA5 0xAC AND SWAP1 0x1F 0xE4 0x4D MSTORE8 0xC8 0x4C 0xC0 0xB1 PUSH2 0xEB66 CALLCODE 0xEF DUP12 0xDE MOD PREVRANDAO 0x2E BALANCE 0x4E DUP9 DIV CODECOPY PUSH17 0x64736F6C63430008150033000000000000 ",
+			"sourceMap": "61:24:0:-:0;;;;;;;;;;;;;;;;;;;"
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "60806040525f80fdfea2646970667358221220a2ea56faa5ac16901fe44d53c84cc0b161eb66f2ef8bde06442e314e8804397064736f6c63430008150033",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 LOG2 0xEA JUMP STATICCALL 0xA5 0xAC AND SWAP1 0x1F 0xE4 0x4D MSTORE8 0xC8 0x4C 0xC0 0xB1 PUSH2 0xEB66 CALLCODE 0xEF DUP12 0xDE MOD PREVRANDAO 0x2E BALANCE 0x4E DUP9 DIV CODECOPY PUSH17 0x64736F6C63430008150033000000000000 ",
+			"sourceMap": "61:24:0:-:0;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "12400",
+				"executionCost": "64",
+				"totalCost": "12464"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": []
+}
