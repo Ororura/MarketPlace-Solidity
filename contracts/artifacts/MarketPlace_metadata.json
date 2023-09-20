@@ -590,7 +590,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Test.sol": "MarketPlace"
+			"contracts/MarketPlace.sol": "MarketPlace"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -604,7 +604,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Test.sol": {
+		"contracts/MarketPlace.sol": {
 			"keccak256": "0x8064145fb7f9ea084043727eb8940fa709d79648cf81160bce814c844333bd54",
 			"license": "MIT",
 			"urls": [
