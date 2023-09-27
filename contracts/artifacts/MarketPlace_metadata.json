@@ -14,7 +14,7 @@
 				"inputs": [
 					{
 						"internalType": "bool",
-						"name": "_status",
+						"name": "_solution",
 						"type": "bool"
 					},
 					{
@@ -106,7 +106,7 @@
 				"inputs": [
 					{
 						"internalType": "bool",
-						"name": "_status",
+						"name": "_solution",
 						"type": "bool"
 					},
 					{
@@ -599,11 +599,11 @@
 	},
 	"sources": {
 		"contracts/edits.sol": {
-			"keccak256": "0xfd6310ede27a4b1f989e94d8e2284caafc55beb05b4674cf806dbdda8bfa55de",
+			"keccak256": "0x22a01e18de8e57c95dbdad1914a959c99c8a2ac993a5d17226754072734d0e9c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5d742cceb9796a602523395b1676502688df69085fd53e5d900cc9e41c73052e",
-				"dweb:/ipfs/QmedSQLjMM9GyD3YMkzAyEj77fkW4KLPrHHVDD32vrgtcK"
+				"bzz-raw://62bc1af7698b83bf0f3b512f93f7a773af48e01efc018f6d64fc318ff5f97465",
+				"dweb:/ipfs/QmQj4LjfwqCL16TcGdzAZvB3bmBh6ahqUX5m3uRJJpHYvZ"
 			]
 		}
 	},

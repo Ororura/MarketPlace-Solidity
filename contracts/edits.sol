@@ -6,8 +6,6 @@ contract MarketPlace {
     enum Role { User, Market, Supplier }
     enum Status { Created, Prepairing, Canceled, Complete}
 
-    // Для экономии размера контракта, рекомендую использовать декоратор external, для всех методов которые не используются в самом контракте
-
     Ticket[] public tickets;
     address public owner;
     DeliveryOrder[] public deliveryOrders;
@@ -61,19 +59,19 @@ contract MarketPlace {
         _;
     }
 
-    function makeUser() public {
+    function makeUser() external {
         users[msg.sender] = User(Role.User, 0);
     }
 
-    function makeSupplier() public {
+    function makeSupplier() external  {
         users[msg.sender] = User(Role.Supplier, 0);
     }
 
-    function makeMarket() public  {
+    function makeMarket() external   {
         users[msg.sender] = User(Role.Market, 0);
     }
 
-    function approveChangeRole(uint _idTicket) public OnlyOwner {
+    function approveChangeRole(uint _idTicket) external  OnlyOwner {
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
         users[userAddr].role = changedRole;
@@ -99,12 +97,11 @@ contract MarketPlace {
         return string(inputBytes);
     }
 
-    function genRef(string memory _nameRef, address _user) public {
-        require(msg.sender != _user); // что это
+    function genRef(string memory _nameRef, address _user) external {
         referrals[_nameRef] = _user;
     } 
 
-    function makeDelivery(address _shop, uint _productId, uint _amount) public {
+    function makeDelivery(address _shop, uint _productId, uint _amount) external  {
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < marketProducts[_shop].length, "Invalid product ID");
         string memory productName = marketProducts[_shop][_productId].name;
@@ -114,8 +111,8 @@ contract MarketPlace {
         deliveryOrders.push(order);
     }
 
-    function approveDelivery(bool _status, uint _deliveryId) public AccessControl(Role.Market) {
-        if (_status) {
+    function approveDelivery(bool _solution, uint _deliveryId) external  AccessControl(Role.Market) {
+        if (_solution) {
             deliveryOrders[_deliveryId].status = Status.Prepairing;
         }
         else {
@@ -123,9 +120,9 @@ contract MarketPlace {
         }
     }
 
-    function acceptDelivery(bool _status, uint _deliveryId) public payable AccessControl(Role.User) { // status -> solution
+    function acceptDelivery(bool _solution, uint _deliveryId) external  payable AccessControl(Role.User) { 
         require(deliveryOrders[_deliveryId].status == Status.Prepairing);
-        if (_status) { 
+        if (_solution) { 
             purchase(deliveryOrders[_deliveryId].shop, deliveryOrders[_deliveryId].amount, _deliveryId, "");
         }
         else {
@@ -133,28 +130,28 @@ contract MarketPlace {
         }
     }
 
-    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier) {
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) external  AccessControl(Role.Supplier) {
         Product memory item = Product(_addressSupp, _inStock, _price / 2, _name, _expDate);
         supplierProducts[_addressSupp].push(item);
     }
 
-    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market) {
+    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) external  AccessControl(Role.Market) {
         Product memory item = Product(msg.sender, _inStock, _price, _name, _expDate);
         marketProducts[msg.sender].push(item);
     }
     
 
-    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market) {
+    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) external payable AccessControl(Role.Market) {
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < supplierProducts[_supplier].length, "Invalid product ID");
         uint price = supplierProducts[_supplier][_productId].price;
-        uint totalPrice = price * _amount; // слишком много
+        uint totalPrice = price * _amount; 
         require(msg.value >= totalPrice, "Insufficient funds sent");
         string memory targetName = supplierProducts[_supplier][_productId].name;
         bool productExists = false;
 
         for(uint i = 0; i< marketProducts[_shop].length; i++){
-            if (keccak256(bytes(targetName)) == keccak256(bytes(marketProducts[_shop][i].name))){ // bytes -> abi.encode
+            if (keccak256(abi.encode(targetName)) == keccak256(abi.encode(marketProducts[_shop][i].name))){
                 marketProducts[_shop][i].inStock += _amount;
                 productExists = true;
                 break;   
@@ -169,14 +166,14 @@ contract MarketPlace {
         supplierProducts[_supplier][_productId].inStock -= _amount;
 
         if (msg.value > totalPrice) {
-            payable(msg.sender).transfer(msg.value - totalPrice); // лишнее
+            payable(msg.sender).transfer(msg.value - totalPrice); 
         }
 
     }
 
 
 
-    function refund(address _shop, uint _productId) public {
+    function refund(address _shop, uint _productId) external  {
         require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
         uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price;
         marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
@@ -205,7 +202,7 @@ contract MarketPlace {
         bool productExists = false;
 
         for (uint i = 0; i < userProducts[msg.sender].length; i++) {
-            if (keccak256(bytes(userProducts[msg.sender][i].name)) == keccak256(bytes(userProducts[_shop][_id].name))) {
+            if (keccak256(abi.encode(userProducts[msg.sender][i].name)) == keccak256(abi.encode(userProducts[_shop][_id].name))) {
                 userProducts[msg.sender][i].inStock += _amount;
                 productExists = true;
                 break; 
@@ -225,7 +222,7 @@ contract MarketPlace {
         }
     }
 
-    function withdrawBal() public AccessControl(Role.Market) { // поставь модификатор и убери параметр
+    function withdrawBal() public AccessControl(Role.Market) { 
         payable(msg.sender).transfer(users[msg.sender].balance);
         users[msg.sender].balance = 0;
     }

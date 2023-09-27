@@ -1,0 +1,70 @@
+{
+	"compiler": {
+		"version": "0.8.21+commit.d9974bed"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "first",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "second",
+						"type": "string"
+					}
+				],
+				"name": "getSenderBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/test.sol": "BalanceExample"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/test.sol": {
+			"keccak256": "0x36573711f74e2e0b9ca829bcdee1698b184a492796dd78371d825a4c1237fccb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://19acea097827f80e1a4a48e3e5516a0db954fe8e482f6ea1415eab4adcf4deb7",
+				"dweb:/ipfs/QmYr9FMjfF9GJMHAc8KMaij5Y6bhz9FiHSYJz539mamWXm"
+			]
+		}
+	},
+	"version": 1
+}

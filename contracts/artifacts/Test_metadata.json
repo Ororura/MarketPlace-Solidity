@@ -6,22 +6,10 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_modulus",
-						"type": "uint256"
-					}
-				],
-				"name": "randMod",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"inputs": [],
+				"name": "test",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			}
 		],
@@ -38,7 +26,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Test.sol": "Test"
+			"contracts/test.sol": "Test"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -52,12 +40,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Test.sol": {
-			"keccak256": "0x174dd0d374b697fae5b97447c23de99e66d1719dd12590b229a3bd989f2d903a",
+		"contracts/test.sol": {
+			"keccak256": "0xbf8422582ab2538dff14cc70f984e92587beec75328246e662e25f7b9b848117",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5266d11c5687f408b5e7ca5d34731453b83909e92f7c28dc24fb2fd2d5166355",
-				"dweb:/ipfs/QmUJQrGJcsHpADubuUJ1QVZzPXZjZCqzyVxXtV1AWvQur6"
+				"bzz-raw://56971917e08520766955783ef2732ee34daec9a9c6a3f780bdb84c9f0ab8cd38",
+				"dweb:/ipfs/QmXcZ5dwMVPDCm9HFHUKwoqsnVsx1EXVMV63JHbGdxDWVz"
 			]
 		}
 	},
