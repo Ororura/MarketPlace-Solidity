@@ -564,13 +564,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_shop",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "withdrawBal",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -590,7 +584,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MarketPlace.sol": "MarketPlace"
+			"contracts/edits.sol": "MarketPlace"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -604,12 +598,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MarketPlace.sol": {
-			"keccak256": "0x8064145fb7f9ea084043727eb8940fa709d79648cf81160bce814c844333bd54",
+		"contracts/edits.sol": {
+			"keccak256": "0xfd6310ede27a4b1f989e94d8e2284caafc55beb05b4674cf806dbdda8bfa55de",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f275b41193c1750b92a6fc9d2f0d2fdfcbe6e12b692580f67e081519de24b5dd",
-				"dweb:/ipfs/QmTdvQorfPAbn6Z5PLARHtosvVU1hVkEnzg8GUoQC4zXfi"
+				"bzz-raw://5d742cceb9796a602523395b1676502688df69085fd53e5d900cc9e41c73052e",
+				"dweb:/ipfs/QmedSQLjMM9GyD3YMkzAyEj77fkW4KLPrHHVDD32vrgtcK"
 			]
 		}
 	},

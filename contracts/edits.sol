@@ -6,7 +6,8 @@ contract MarketPlace {
     enum Role { User, Market, Supplier }
     enum Status { Created, Prepairing, Canceled, Complete}
 
-    
+    // Для экономии размера контракта, рекомендую использовать декоратор external, для всех методов которые не используются в самом контракте
+
     Ticket[] public tickets;
     address public owner;
     DeliveryOrder[] public deliveryOrders;
@@ -55,9 +56,8 @@ contract MarketPlace {
         _;
     }
     
-    modifier AccessControl(Role _role, address _shop){
+    modifier AccessControl(Role _role){
         require(users[msg.sender].role == _role, "Your role does not allow this change");
-        require(msg.sender == _shop, "The shop does not match the sender");
         _;
     }
 
@@ -100,11 +100,11 @@ contract MarketPlace {
     }
 
     function genRef(string memory _nameRef, address _user) public {
-        require(msg.sender != _user);
+        require(msg.sender != _user); // что это
         referrals[_nameRef] = _user;
     } 
 
-    function makeDelivery(address _shop, uint _productId, uint _amount) public AccessControl(Role.User, msg.sender) {
+    function makeDelivery(address _shop, uint _productId, uint _amount) public {
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < marketProducts[_shop].length, "Invalid product ID");
         string memory productName = marketProducts[_shop][_productId].name;
@@ -114,7 +114,7 @@ contract MarketPlace {
         deliveryOrders.push(order);
     }
 
-    function approveDelivery(bool _status, uint _deliveryId) public AccessControl(Role.Market, msg.sender) {
+    function approveDelivery(bool _status, uint _deliveryId) public AccessControl(Role.Market) {
         if (_status) {
             deliveryOrders[_deliveryId].status = Status.Prepairing;
         }
@@ -123,7 +123,7 @@ contract MarketPlace {
         }
     }
 
-    function acceptDelivery(bool _status, uint _deliveryId) public payable AccessControl(Role.User, msg.sender) {
+    function acceptDelivery(bool _status, uint _deliveryId) public payable AccessControl(Role.User) { // status -> solution
         require(deliveryOrders[_deliveryId].status == Status.Prepairing);
         if (_status) { 
             purchase(deliveryOrders[_deliveryId].shop, deliveryOrders[_deliveryId].amount, _deliveryId, "");
@@ -133,28 +133,28 @@ contract MarketPlace {
         }
     }
 
-    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier, _addressSupp) {
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) public AccessControl(Role.Supplier) {
         Product memory item = Product(_addressSupp, _inStock, _price / 2, _name, _expDate);
         supplierProducts[_addressSupp].push(item);
     }
 
-    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market, msg.sender) {
+    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) public AccessControl(Role.Market) {
         Product memory item = Product(msg.sender, _inStock, _price, _name, _expDate);
         marketProducts[msg.sender].push(item);
     }
     
 
-    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market, _shop) {
+    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) public payable AccessControl(Role.Market) {
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < supplierProducts[_supplier].length, "Invalid product ID");
         uint price = supplierProducts[_supplier][_productId].price;
-        uint totalPrice = price * _amount * 1 ether;
+        uint totalPrice = price * _amount; // слишком много
         require(msg.value >= totalPrice, "Insufficient funds sent");
         string memory targetName = supplierProducts[_supplier][_productId].name;
         bool productExists = false;
 
         for(uint i = 0; i< marketProducts[_shop].length; i++){
-            if (keccak256(bytes(targetName)) == keccak256(bytes(marketProducts[_shop][i].name))){
+            if (keccak256(bytes(targetName)) == keccak256(bytes(marketProducts[_shop][i].name))){ // bytes -> abi.encode
                 marketProducts[_shop][i].inStock += _amount;
                 productExists = true;
                 break;   
@@ -169,17 +169,19 @@ contract MarketPlace {
         supplierProducts[_supplier][_productId].inStock -= _amount;
 
         if (msg.value > totalPrice) {
-            payable(msg.sender).transfer(msg.value - totalPrice);
+            payable(msg.sender).transfer(msg.value - totalPrice); // лишнее
         }
 
     }
 
+
+
     function refund(address _shop, uint _productId) public {
         require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
-        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price * 1 ether;
+        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price;
         marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
         delete userProducts[msg.sender][_productId];
-        users[_shop].balance -= totalRefSum;
+        users[_shop].balance -= totalRefSum; // при любой покупке, возврате, баланс менять нужно не только у магазина
         payable(msg.sender).transfer(totalRefSum);
     }
 
@@ -192,7 +194,7 @@ contract MarketPlace {
         require(_id < marketProducts[_shop].length, "Invalid product ID");
         require(_amount <= marketProducts[_shop][_id].inStock, "Not enough stock available");
 
-        uint totalPrice = _amount * marketProducts[_shop][_id].price * 1 ether;
+        uint totalPrice = _amount * marketProducts[_shop][_id].price;
 
         if (referrals[_ref] == msg.sender) {
             totalPrice = (totalPrice * 90 / 100);
@@ -219,11 +221,12 @@ contract MarketPlace {
         users[_shop].balance += totalPrice;
 
         if (msg.value > totalPrice) {
-            payable(msg.sender).transfer(msg.value - totalPrice);
+            payable(msg.sender).transfer(msg.value - totalPrice); // лишнее
         }
     }
 
-    function withdrawBal(address _shop) public {
-        payable(_shop).transfer(users[_shop].balance);
+    function withdrawBal() public AccessControl(Role.Market) { // поставь модификатор и убери параметр
+        payable(msg.sender).transfer(users[msg.sender].balance);
+        users[msg.sender].balance = 0;
     }
 }
