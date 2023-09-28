@@ -3,18 +3,18 @@
 pragma solidity ^0.8.21;
 
 contract MarketPlace {
-    enum Role { User, Market, Supplier }
-    enum Status { Created, Prepairing, Canceled, Complete}
+    enum Role { User, Market, Supplier } // Роли пользователей 
+    enum Status { Created, Prepairing, Canceled, Complete} // Статусы создания доставки  
 
-    Ticket[] public tickets;
-    address public owner;
-    DeliveryOrder[] public deliveryOrders;
+    Ticket[] public tickets; // Массив из тикетов на смену ролей. 
+    address public owner; 
+    DeliveryOrder[] public deliveryOrders; // Список заказов на доставку 
 
     constructor() {
         owner = msg.sender;
     }
 
-    struct DeliveryOrder {
+    struct DeliveryOrder { // Структура заказов 
         address userAddr;
         address shop;
         Status status;
@@ -23,17 +23,17 @@ contract MarketPlace {
         uint amount;
     }
 
-    struct Ticket {
+    struct Ticket { // Структура тикетов на смену ролей 
         address userAddr;
         Role role;
     }
 
-    struct User {
+    struct User { // Структура пользователей
         Role role;
         uint balance;
     }
 
-    struct Product {
+    struct Product { // Структура продукта
         address userAddress;
         uint inStock;
         uint price;
@@ -42,11 +42,11 @@ contract MarketPlace {
     }
 
 
-    mapping(address => User) public users;
-    mapping(address => Product[]) public userProducts;
-    mapping(address => Product[]) public marketProducts;
-    mapping(address => Product[]) public supplierProducts;
-    mapping(string => address) public referrals;    
+    mapping(address => User) public users;  // Маппинг всех пользователей 
+    mapping(address => Product[]) public userProducts; // Инвентарь продуктов обычного покупателя
+    mapping(address => Product[]) public marketProducts; // Инвентарь продуктов магазина 
+    mapping(address => Product[]) public supplierProducts; // Инвентарь поставщиков
+    mapping(string => address) public referrals; // Рефералка привязанная к пользователю, которого указали при создании
 
 
     modifier OnlyOwner(){
@@ -59,35 +59,35 @@ contract MarketPlace {
         _;
     }
 
-    function makeUser() external {
+    function makeUser() external { // Создание покупателя
         users[msg.sender] = User(Role.User, 0);
     }
 
-    function makeSupplier() external  {
+    function makeSupplier() external  { // Создание поставщика
         users[msg.sender] = User(Role.Supplier, 0);
     }
 
-    function makeMarket() external   {
+    function makeMarket() external   { // Создание магазина 
         users[msg.sender] = User(Role.Market, 0);
     }
 
-    function approveChangeRole(uint _idTicket) external  OnlyOwner {
+    function approveChangeRole(uint _idTicket) external  OnlyOwner { // Подтверждение смены роли для пользователя ( Подтверждать смену может только ВЛАДЕЛЦ контракта). Передается id тикета
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
         users[userAddr].role = changedRole;
     }
 
-    function changeRole(Role _role) public {
+    function changeRole(Role _role) public { // Создание тикета на смену роли. Указываем роль, которую хотим сменить 
         tickets.push(Ticket(msg.sender, _role));
     }
 
-    function randMod(uint _modulus) public view returns(uint) {   
+    function randMod(uint _modulus) public view returns(uint) { // Генерация рандомного числа 
         uint randNonce;
         randNonce++;
         return uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % _modulus;
     }
 
-    function toUpper(string memory input) public pure returns (string memory) {
+    function toUpper(string memory input) public pure returns (string memory) { // Перевод в заглавные буквы 
         bytes memory inputBytes = bytes(input);
         for (uint256 i = 0; i < inputBytes.length; i++) {
             if (uint8(inputBytes[i]) >= 97 && uint8(inputBytes[i]) <= 122) {
@@ -97,11 +97,11 @@ contract MarketPlace {
         return string(inputBytes);
     }
 
-    function genRef(string memory _nameRef, address _user) external {
+    function genRef(string memory _nameRef, address _user) external { // Создание рефералки для скидки. Указываем название рефералки и пользователя, который может её использовать.
         referrals[_nameRef] = _user;
     } 
 
-    function makeDelivery(address _shop, uint _productId, uint _amount) external  {
+    function makeDelivery(address _shop, uint _productId, uint _amount) external  { // Заказать доставку продуктов на дом. Указываем магазин, продукт, кол-во.
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < marketProducts[_shop].length, "Invalid product ID");
         string memory productName = marketProducts[_shop][_productId].name;
@@ -111,7 +111,7 @@ contract MarketPlace {
         deliveryOrders.push(order);
     }
 
-    function approveDelivery(bool _solution, uint _deliveryId) external  AccessControl(Role.Market) {
+    function approveDelivery(bool _solution, uint _deliveryId) external  AccessControl(Role.Market) {  // Подтведрить доставку со стороны магазина. Указываем решение (true/false) и id доставки 
         if (_solution) {
             deliveryOrders[_deliveryId].status = Status.Prepairing;
         }
@@ -120,7 +120,7 @@ contract MarketPlace {
         }
     }
 
-    function acceptDelivery(bool _solution, uint _deliveryId) external  payable AccessControl(Role.User) { 
+    function acceptDelivery(bool _solution, uint _deliveryId) external  payable AccessControl(Role.User) { // Подтвердить доставку со стороны пользователя (После подтверждения доставки со стороны магазина). Указываем решение (true/false) и id доставки 
         require(deliveryOrders[_deliveryId].status == Status.Prepairing);
         if (_solution) { 
             purchase(deliveryOrders[_deliveryId].shop, deliveryOrders[_deliveryId].amount, _deliveryId, "");
@@ -130,18 +130,18 @@ contract MarketPlace {
         }
     }
 
-    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) external  AccessControl(Role.Supplier) {
+    function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) external  AccessControl(Role.Supplier) { // Добавить товары для поставщика
         Product memory item = Product(_addressSupp, _inStock, _price / 2, _name, _expDate);
         supplierProducts[_addressSupp].push(item);
     }
 
-    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) external  AccessControl(Role.Market) {
+    function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) external  AccessControl(Role.Market) { // Добавить товары для магазина (По логике, мы пополняем товары через поставщика. Я добавил эту функцию, чтобы не тратить время во время тестирования)
         Product memory item = Product(msg.sender, _inStock, _price, _name, _expDate);
         marketProducts[msg.sender].push(item);
     }
     
 
-    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) external payable AccessControl(Role.Market) {
+    function refillStore(address _shop, uint _productId, uint _amount, address _supplier) external payable AccessControl(Role.Market) { // Пополнить магазин. Указываем магазин, id продукта, кол-во, поставщика
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_productId < supplierProducts[_supplier].length, "Invalid product ID");
         uint price = supplierProducts[_supplier][_productId].price;
@@ -173,7 +173,7 @@ contract MarketPlace {
 
 
 
-    function refund(address _shop, uint _productId) external  {
+    function refund(address _shop, uint _productId) external  { // Сделать возврат товара. Указываем магазин и id возвращаемого товра. 
         require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
         uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price;
         marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
@@ -182,7 +182,7 @@ contract MarketPlace {
         payable(msg.sender).transfer(totalRefSum);
     }
 
-    function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable {
+    function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable { // Покупаем со стороны пользователя у магазина продукты. Указываем магазин, id продукта, кол-во, Рефералку(может использовать только тот, которого указали при создании рефералки)
         if (users[msg.sender].role == Role.User) {
             users[msg.sender] = User( Role.User, 0);
         }
@@ -217,12 +217,9 @@ contract MarketPlace {
         marketProducts[_shop][_id].inStock -= _amount;
         users[_shop].balance += totalPrice;
 
-        if (msg.value > totalPrice) {
-            payable(msg.sender).transfer(msg.value - totalPrice); // лишнее
-        }
     }
 
-    function withdrawBal() public AccessControl(Role.Market) { 
+    function withdrawBal() public AccessControl(Role.Market) { // Выводим баланса с контракта. 
         payable(msg.sender).transfer(users[msg.sender].balance);
         users[msg.sender].balance = 0;
     }
