@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
  
 pragma solidity ^0.8.21;
+import "hardhat/console.sol";
 /* 
 TODO: 
 1) Сделать проверку на имеющегося пользователя во время регистрации.
@@ -44,9 +45,9 @@ contract MarketPlace {
         uint expDate;
     }
 
+    DeliveryOrder[] public deliveryOrders;
     Ticket[] public tickets;
     address public owner; 
-    DeliveryOrder[] public deliveryOrders;
 
     mapping(address => bool) public hasRoleChangeRequest;
     mapping(address => User) public users;
@@ -54,7 +55,7 @@ contract MarketPlace {
     mapping(address => Product[]) public userProducts;
     mapping(address => Product[]) public marketProducts;
     mapping(address => Product[]) public supplierProducts; 
-    mapping(string => address) public referrals; 
+    mapping(address => string) public usersReferral; 
     mapping(address => bytes32) public passwords;
 
     constructor() {
@@ -72,9 +73,15 @@ contract MarketPlace {
         _;
     }
 
-    function getProductCounts() external view returns(uint){
-        return userProducts[msg.sender].length;
+    function getProducts(uint _id) external view returns(Product memory) {
+        return userProducts[msg.sender][_id];
     }
+
+    function getReferrals() external view returns(string memory) {
+        return usersReferral[msg.sender];
+    }
+
+    
 
     // !!!!!!!! Привязан ли адресс к аккаутну пользователя? 
     function registration(string memory _login, string memory _firstName, string memory _lastName, string memory _password) external {
@@ -133,7 +140,7 @@ contract MarketPlace {
     }
 
     function genRef(string memory _nameRef, address _user) external {
-        referrals[_nameRef] = _user;
+        usersReferral[_user] = _nameRef;
     } 
 
     function makeDelivery(address _shop, uint _productId, uint _amount) external  {
@@ -232,9 +239,9 @@ contract MarketPlace {
         require(_amount <= marketProducts[_shop][_id].inStock, unicode"Недостаточно продуктов в наличии");
         uint totalPrice = _amount * marketProducts[_shop][_id].price;
         
-        if (referrals[_ref] == msg.sender) {
+        if (keccak256(abi.encodePacked(usersReferral[msg.sender])) == keccak256(abi.encodePacked(_ref))) {
             totalPrice = (totalPrice * 90 / 100);
-            referrals[_ref] = address(0);
+            delete usersReferral[msg.sender];
         }
 
         require(msg.value >= totalPrice, unicode"Недостаточно отправленной валюты");

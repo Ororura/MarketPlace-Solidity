@@ -201,19 +201,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getProductCounts",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -259,6 +246,70 @@
 						"internalType": "struct MarketPlace.Product[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "getProducts",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "inStock",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expDate",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct MarketPlace.Product",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getReferrals",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -480,25 +531,6 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"name": "referrals",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -740,6 +772,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "usersReferral",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "withdrawBal",
 				"outputs": [],
@@ -775,11 +826,19 @@
 	},
 	"sources": {
 		"contracts/edits.sol": {
-			"keccak256": "0x4d3a36897724b03e5487e8e5d843c73b23714399a3886f39a6a518781bfe24e9",
+			"keccak256": "0x6852ac0d89d27bfad1de22fe46585ed7d916d3679d35bad7ec9347ddb9a2cad3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://34011088e3d4e762f6295d6fbe3072afdb7a3865429ac95dcaa1c5bb87ba53b5",
-				"dweb:/ipfs/QmVZk9neU9dRidSxbBpANGAZcEULVER2qF5DAoHJMzFrRW"
+				"bzz-raw://f33e6a66fcbced9e33bee35d415d0b33d2d168308d1d982a52f6194861605618",
+				"dweb:/ipfs/Qmbq3RdavAghxRnue85y2tVYb4zPw8dUQBBypLvGrbkzP6"
+			]
+		},
+		"hardhat/console.sol": {
+			"keccak256": "0x7434453e6d3b7d0e5d0eb7846ffdbc27f0ccf3b163591263739b628074dc103a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://49355f780520494d1d5a0f01858385e51bb5280ce0ecfb960f16995065dca395",
+				"dweb:/ipfs/QmSwJ6C5QLz6xKeQZS8wbwjU1KxRFTYfwbGmtzisd5sRW4"
 			]
 		}
 	},
