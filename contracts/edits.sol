@@ -81,10 +81,11 @@ contract MarketPlace {
         return usersReferral[msg.sender];
     }
 
-    
 
     // !!!!!!!! Привязан ли адресс к аккаутну пользователя? 
     function registration(string memory _login, string memory _firstName, string memory _lastName, string memory _password) external {
+        // require(keccak256(abi.encode(_login) !== keccak256(abi.encode(users[msg.sender]))));
+        // А как сделать проверку?? 
         users[msg.sender] = User(_login, _firstName, _lastName, Role.User, 0);
         passwords[msg.sender] = keccak256(abi.encode(_password));
     }
@@ -99,18 +100,6 @@ contract MarketPlace {
     function getProducts(address _shop) public view returns(Product[] memory){
         return marketProducts[_shop];
     }
-
-    // function makeUser() external { 
-    //     users[msg.sender] = User("test", "test", "test",Role.User, 0);
-    // }
-
-    // function makeSupplier() external  { 
-    //     users[msg.sender] = User("test", "test", "test", Role.Supplier, 0);
-    // }
-
-    // function makeMarket() external   { 
-    //     users[msg.sender] = User("test", "test", "test", Role.Market, 0);
-    // }
 
     function approveChangeRole(uint _idTicket, bool _status) external OnlyOwner { 
         require(_idTicket < tickets.length, unicode"Неверный id");
@@ -146,10 +135,8 @@ contract MarketPlace {
     function makeDelivery(address _shop, uint _productId, uint _amount) external  {
         require(_amount > 0, unicode"Кол-во продуктов должно быть больше 0");
         require(_productId < marketProducts[_shop].length, unicode"Неправильный id продукта");
-        string memory productName = marketProducts[_shop][_productId].name;
-        string memory trackNumber = string.concat("AA",productName,"BB");
-        DeliveryOrder memory order = DeliveryOrder(msg.sender, _shop, Status.Prepairing, trackNumber, _productId, _amount);
-        deliveryOrders.push(order);
+        string memory trackNumber = string.concat("AA",marketProducts[_shop][_productId].name,"BB");
+        deliveryOrders.push(DeliveryOrder(msg.sender, _shop, Status.Prepairing, trackNumber, _productId, _amount));
     }
 
     function approveDelivery(bool _solution, uint _deliveryId) external  AccessControl(Role.Market) { 
@@ -172,13 +159,11 @@ contract MarketPlace {
     }
 
     function addItemsSupplier(uint _inStock, uint _price, string calldata _name, uint _expDate, address _addressSupp) external  AccessControl(Role.Supplier) {
-        Product memory item = Product(0, _addressSupp, _inStock, _price / 2, _name, _expDate);
-        supplierProducts[_addressSupp].push(item);
+        supplierProducts[_addressSupp].push(Product(0, _addressSupp, _inStock, _price / 2, _name, _expDate));
     }
 
     function addItemsMarket(uint _inStock, uint _price, string calldata _name, uint _expDate) external  AccessControl(Role.Market) { 
-        Product memory item = Product(0, msg.sender, _inStock, _price, _name, _expDate);
-        marketProducts[msg.sender].push(item);
+        marketProducts[msg.sender].push(Product(0, msg.sender, _inStock, _price, _name, _expDate));
     }
     
 
@@ -188,11 +173,10 @@ contract MarketPlace {
         uint price = supplierProducts[_supplier][_productId].price;
         uint totalPrice = price * _amount; 
         require(msg.value >= totalPrice, unicode"Недостаточно отправленной валюты");
-        string memory targetName = supplierProducts[_supplier][_productId].name;
         bool productExists = false;
 
         for(uint i = 0; i< marketProducts[_shop].length; i++){
-            if (keccak256(abi.encode(targetName)) == keccak256(abi.encode(marketProducts[_shop][i].name))){
+            if (keccak256(abi.encode(supplierProducts[_supplier][_productId].name)) == keccak256(abi.encode(marketProducts[_shop][i].name))){
                 marketProducts[_shop][i].inStock += _amount;
                 productExists = true;
                 break;   
@@ -200,8 +184,7 @@ contract MarketPlace {
         }
 
         if (!productExists){
-            Product memory newItem = Product(0, _supplier, _amount, price, targetName, supplierProducts[_supplier][_productId].expDate);
-            marketProducts[_shop].push(newItem);
+            marketProducts[_shop].push(Product(0, _supplier, _amount, price, supplierProducts[_supplier][_productId].name, supplierProducts[_supplier][_productId].expDate));
         }
 
         supplierProducts[_supplier][_productId].inStock -= _amount;
@@ -226,11 +209,10 @@ contract MarketPlace {
 
         require(isFound);
         require(userProducts[msg.sender][idArray].expDate > marketProducts[_shop][_productId].expDate);
-        uint totalRefSum =  userProducts[msg.sender][idArray].inStock * marketProducts[_shop][_productId].price;
         marketProducts[_shop][_productId].inStock += userProducts[msg.sender][idArray].inStock;
         delete userProducts[msg.sender][idArray];
-        users[_shop].balance -= totalRefSum;
-        payable(msg.sender).transfer(totalRefSum);
+        users[_shop].balance -= userProducts[msg.sender][idArray].inStock * marketProducts[_shop][_productId].price;
+        payable(msg.sender).transfer(userProducts[msg.sender][idArray].inStock * marketProducts[_shop][_productId].price);
     }
 
     function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable {
