@@ -775,11 +775,11 @@
 	},
 	"sources": {
 		"contracts/edits.sol": {
-			"keccak256": "0xd51c0e7d319506ff9d52a905729ee52aa67272462ed18b56de0202cf681e7d79",
+			"keccak256": "0x4d3a36897724b03e5487e8e5d843c73b23714399a3886f39a6a518781bfe24e9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1adb97f5d56a298807ae1d0c00bd1187e67dd8d75acd30c7ae6d63ad00247a32",
-				"dweb:/ipfs/Qma4MjN3XQhEZ6PwuSiLHjsFgLzCZzqds8FsuZG4hLCybV"
+				"bzz-raw://34011088e3d4e762f6295d6fbe3072afdb7a3865429ac95dcaa1c5bb87ba53b5",
+				"dweb:/ipfs/QmVZk9neU9dRidSxbBpANGAZcEULVER2qF5DAoHJMzFrRW"
 			]
 		}
 	},

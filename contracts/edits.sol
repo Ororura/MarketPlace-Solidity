@@ -3,6 +3,7 @@
 pragma solidity ^0.8.21;
 /* 
 TODO: 
+1) Сделать проверку на имеющегося пользователя во время регистрации.
 4) Попробовать убрать маппинги магазинов, супплаеров и оставить один. (Добавить адресс к продукту) обращаемся к   
 ПРОБЛЕМА:  
 */
@@ -67,7 +68,7 @@ contract MarketPlace {
     }
     
     modifier AccessControl(Role _role){
-        require(users[msg.sender].role == _role, "Your role does not allow this change");
+        require(users[msg.sender].role == _role, unicode"Ваша роль не позволяет это использовать");
         _;
     }
 
@@ -105,7 +106,7 @@ contract MarketPlace {
     // }
 
     function approveChangeRole(uint _idTicket, bool _status) external OnlyOwner { 
-        require(_idTicket < tickets.length);
+        require(_idTicket < tickets.length, unicode"Неверный id");
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
 
@@ -119,7 +120,7 @@ contract MarketPlace {
 
 
     function changeRole(Role _role) public {
-        require(!hasRoleChangeRequest[msg.sender]);
+        require(!hasRoleChangeRequest[msg.sender], unicode"Вы уже создали запрос");
         tickets.push(Ticket(msg.sender, _role));
         hasRoleChangeRequest[msg.sender] = true;
     }
@@ -136,8 +137,8 @@ contract MarketPlace {
     } 
 
     function makeDelivery(address _shop, uint _productId, uint _amount) external  {
-        require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_productId < marketProducts[_shop].length, "Invalid product ID");
+        require(_amount > 0, unicode"Кол-во продуктов должно быть больше 0");
+        require(_productId < marketProducts[_shop].length, unicode"Неправильный id продукта");
         string memory productName = marketProducts[_shop][_productId].name;
         string memory trackNumber = string.concat("AA",productName,"BB");
         DeliveryOrder memory order = DeliveryOrder(msg.sender, _shop, Status.Prepairing, trackNumber, _productId, _amount);
@@ -175,11 +176,11 @@ contract MarketPlace {
     
 
     function refillStore(address _shop, uint _productId, uint _amount, address _supplier) external payable AccessControl(Role.Market) {
-        require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_productId < supplierProducts[_supplier].length, "Invalid product ID");
+        require(_amount > 0, unicode"Кол-во продуктов должно быть больше 0");
+        require(_productId < supplierProducts[_supplier].length, unicode"Неправильный id продукта");
         uint price = supplierProducts[_supplier][_productId].price;
         uint totalPrice = price * _amount; 
-        require(msg.value >= totalPrice, "Insufficient funds sent");
+        require(msg.value >= totalPrice, unicode"Недостаточно отправленной валюты");
         string memory targetName = supplierProducts[_supplier][_productId].name;
         bool productExists = false;
 
@@ -226,9 +227,9 @@ contract MarketPlace {
     }
 
     function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable {
-        require(_amount > 0, "Purchase amount must be greater than 0");
-        require(_id < marketProducts[_shop].length, "Invalid product ID");
-        require(_amount <= marketProducts[_shop][_id].inStock, "Not enough stock available");
+        require(_amount > 0, unicode"Кол-во покупок должно быть больше 0");
+        require(_id < marketProducts[_shop].length, unicode"Неправильный id продукта");
+        require(_amount <= marketProducts[_shop][_id].inStock, unicode"Недостаточно продуктов в наличии");
         uint totalPrice = _amount * marketProducts[_shop][_id].price;
         
         if (referrals[_ref] == msg.sender) {
@@ -236,7 +237,7 @@ contract MarketPlace {
             referrals[_ref] = address(0);
         }
 
-        require(msg.value >= totalPrice, "Insufficient funds sent");
+        require(msg.value >= totalPrice, unicode"Недостаточно отправленной валюты");
         bool productExists = false;
 
         for (uint i = 0; i < userProducts[msg.sender].length; i++) {
