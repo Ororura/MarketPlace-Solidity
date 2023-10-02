@@ -201,6 +201,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getProductCounts",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -246,25 +259,6 @@
 						"internalType": "struct MarketPlace.Product[]",
 						"name": "",
 						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userAddress",
-						"type": "address"
-					}
-				],
-				"name": "getUserProductsCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -359,27 +353,6 @@
 					}
 				],
 				"name": "makeDelivery",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "makeMarket",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "makeSupplier",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "makeUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -681,25 +654,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "input",
-						"type": "string"
-					}
-				],
-				"name": "toUpper",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
@@ -821,11 +775,11 @@
 	},
 	"sources": {
 		"contracts/edits.sol": {
-			"keccak256": "0x041a44b5a99719b0b7a42a48d720977a9200b1c0ed959c79dea2484d61a2f1d4",
+			"keccak256": "0xd51c0e7d319506ff9d52a905729ee52aa67272462ed18b56de0202cf681e7d79",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://96f84520854006f1b5ff47d092d52f2c6a692a0a4471e325cee53b16c64919c4",
-				"dweb:/ipfs/QmWvAW8GcWCcN7Cf1Qw89rbSaLi63pruENQ9vgUyV1EhMm"
+				"bzz-raw://1adb97f5d56a298807ae1d0c00bd1187e67dd8d75acd30c7ae6d63ad00247a32",
+				"dweb:/ipfs/Qma4MjN3XQhEZ6PwuSiLHjsFgLzCZzqds8FsuZG4hLCybV"
 			]
 		}
 	},
