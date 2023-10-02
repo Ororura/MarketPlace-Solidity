@@ -4,9 +4,7 @@ pragma solidity ^0.8.21;
 /* 
 TODO: 
 1) Пофиксить проблему с id товара при возврате товара (возможно возврате, не помню). Решение: Оставить по дфеолту 0 и при покупки ставить id в магазине. 
-2) Добавить Логин и фио к юзеру
-3) Сделать маппинг из паролей
-4) Попробовать убрать маппинги магазинов, супплаеров и оставить один. (Добавить адресс к продукту) обращаемся к  
+4) Попробовать убрать маппинги магазинов, супплаеров и оставить один. (Добавить адресс к продукту) обращаемся к   
 ПРОБЛЕМА:  
 */
 
@@ -53,6 +51,7 @@ contract MarketPlace {
     address public owner; 
     DeliveryOrder[] public deliveryOrders; // Список заказов на доставку 
 
+    mapping(address => bool) public hasRoleChangeRequest;
     mapping(address => User) public users;  // Маппинг всех пользователей 
 
     // 1 маппинг, чтобы достать продукты каждого юзера
@@ -80,6 +79,11 @@ contract MarketPlace {
         require(users[msg.sender].role == _role, "Your role does not allow this change");
         _;
     }
+
+    function getUserProductsCount(address userAddress) public view returns (uint) {
+        return userProducts[userAddress].length;
+    }
+
     // !!!!!!!! Привязан ли адресс к аккаутну пользователя? 
     function registration(string memory _login, string memory _firstName, string memory _lastName, string memory _password) external {
         users[msg.sender] = User(_login, _firstName, _lastName, Role.User, 0);
@@ -97,32 +101,43 @@ contract MarketPlace {
 
     // проверка совпали ли логин пароль, возвращается структура
 
-    // function makeUser() external { // Создание покупателя
-    //     users[msg.sender] = User(Role.User, 0);
-    // }
+    function makeUser() external { // Создание покупателя
+        users[msg.sender] = User("test", "test", "test",Role.User, 0);
+    }
+
 
     function getProducts(address _shop) public view returns(Product[] memory){
         return marketProducts[_shop];
     }
 
-    // function makeSupplier() external  { // Создание поставщика
-    //     users[msg.sender] = User(Role.Supplier, 0);
-    // }
+    function makeSupplier() external  { // Создание поставщика
+        users[msg.sender] = User("test", "test", "test", Role.Supplier, 0);
+    }
 
-    // function makeMarket() external   { // Создание магазина 
-    //     users[msg.sender] = User(Role.Market, 0);
-    // }
+    function makeMarket() external   { // Создание магазина 
+        users[msg.sender] = User("test", "test", "test", Role.Market, 0);
+    }
 
-    function approveChangeRole(uint _idTicket) external  OnlyOwner { // Подтверждение смены роли для пользователя ( Подтверждать смену может только ВЛАДЕЛЦ контракта). Передается id тикета
+    function approveChangeRole(uint _idTicket, bool _status) external OnlyOwner { 
+        require(_idTicket < tickets.length);
+
         address userAddr = tickets[_idTicket].userAddr;
         Role changedRole = tickets[_idTicket].role;
-        users[userAddr].role = changedRole;
+
+        if (_status) {
+            users[userAddr].role = changedRole;
+        }
+        hasRoleChangeRequest[userAddr] = false;
+        delete tickets[_idTicket];
     }
 
-    function changeRole(Role _role) public { // Создание тикета на смену роли. Указываем роль, которую хотим сменить
-    // сделать проверку, чтобы человек не мог отправить 2 раза тикет 
+
+    function changeRole(Role _role) public {
+        require(!hasRoleChangeRequest[msg.sender]);
         tickets.push(Ticket(msg.sender, _role));
+        hasRoleChangeRequest[msg.sender] = true;
     }
+
 
     function randMod(uint _modulus) public view returns(uint) { // Генерация рандомного числа 
         uint randNonce;
@@ -214,23 +229,40 @@ contract MarketPlace {
 
     }
 
-    
 
-    // Проблема: как нам перебирать mapping
-    function refundRequest(address _shop, uint _productId) external  { // Сделать возврат товара. Указываем магазин и id возвращаемого товра. 
+    function refundRequest(address _shop, uint _productId) external  {
         require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
-        uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price;
-        marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
-        delete userProducts[msg.sender][_productId];
-        users[_shop].balance -= totalRefSum; // при любой покупке, возврате, баланс менять нужно не только у магазина
+        
+        uint totalRefSum = 0;
+        uint productIndex = 0;
+        for (uint i = 0; i < userProducts[msg.sender].length; i++) {
+            if (userProducts[msg.sender][i].id == _productId) {
+                totalRefSum = userProducts[msg.sender][i].inStock * marketProducts[_shop][_productId].price;
+                productIndex = i;
+                break;
+            }
+        }
+
+        require(totalRefSum > 0, "Product not found in user's inventory");
+        
+        marketProducts[_shop][_productId].inStock += userProducts[msg.sender][productIndex].inStock;
+        delete userProducts[msg.sender][productIndex];
+        users[_shop].balance -= totalRefSum;
         payable(msg.sender).transfer(totalRefSum);
     }
 
+    // Проблема: как нам перебирать mapping
+    // function refundRequest(address _shop, uint _productId) external  { // Сделать возврат товара. Указываем магазин и id возвращаемого товра. 
+    //     require(userProducts[msg.sender][_productId].expDate > marketProducts[_shop][_productId].expDate);
+    //     uint totalRefSum =  userProducts[msg.sender][_productId].inStock * marketProducts[_shop][_productId].price;
+    //     marketProducts[_shop][_productId].inStock += userProducts[msg.sender][_productId].inStock;
+    //     delete userProducts[msg.sender][_productId];
+    //     users[_shop].balance -= totalRefSum; // при любой покупке, возврате, баланс менять нужно не только у магазина
+    //     payable(msg.sender).transfer(totalRefSum);
+    // }
+
 
     function purchase(address _shop, uint _amount, uint _id, string memory _ref ) public payable { // Покупаем со стороны пользователя у магазина продукты. Указываем магазин, id продукта, кол-во, Рефералку(может использовать только тот, которого указали при создании рефералки)
-        // if (users[msg.sender].role == Role.User) {
-        //     users[msg.sender] = User( Role.User, 0);
-        // }
         
         require(_amount > 0, "Purchase amount must be greater than 0");
         require(_id < marketProducts[_shop].length, "Invalid product ID");
@@ -246,7 +278,7 @@ contract MarketPlace {
         bool productExists = false;
 
         for (uint i = 0; i < userProducts[msg.sender].length; i++) {
-            if (keccak256(abi.encode(userProducts[msg.sender][i].name)) == keccak256(abi.encode(userProducts[_shop][_id].name))) {
+            if (keccak256(abi.encode(userProducts[msg.sender][i].name)) == keccak256(abi.encode(marketProducts[_shop][_id].name))) {
                 userProducts[msg.sender][i].inStock += _amount;
                 productExists = true;
                 break; 
