@@ -47,7 +47,11 @@ contract MarketPlace {
 
     DeliveryOrder[] public deliveryOrders;
     Ticket[] public tickets;
-    address public owner; 
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    } 
 
     mapping(address => bool) public hasRoleChangeRequest;
     mapping(address => User) public users;
@@ -57,11 +61,6 @@ contract MarketPlace {
     mapping(address => Product[]) public supplierProducts; 
     mapping(address => string) public usersReferral; 
     mapping(address => bytes32) public passwords;
-
-    constructor() {
-        owner = msg.sender;
-    }
-
 
     modifier OnlyOwner(){
         require(msg.sender == owner);
