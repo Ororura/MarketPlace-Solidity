@@ -388,6 +388,25 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "logins",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_shop",
 						"type": "address"
@@ -811,7 +830,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/edits.sol": "MarketPlace"
+			"contracts/MarketPlace.sol": "MarketPlace"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -825,12 +844,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/edits.sol": {
-			"keccak256": "0x0e284522d4fa1f3760f0470a2dabff3f0c5cce5af440cda94873cb1026bcc8cc",
+		"contracts/MarketPlace.sol": {
+			"keccak256": "0xdcd46adb6764f402e665e921572c9bf0adebff381551ecc5c60bbf23271dce0e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9bab08341b466d224ede9ba3ddc7c8edbb76e310da055ba835d8f791bd9fb469",
-				"dweb:/ipfs/QmWZDTGNcHtwwGfKxfvo7pgGN81VkwWAUPHWvQmhVKqzPd"
+				"bzz-raw://1c39f92bb12a4dbfdb5d854e028a041fa2c7b38918c4e865a7bbb2656aa9eaf0",
+				"dweb:/ipfs/QmZqAGUAowTC4ZG4SjBDQDgCKyTDB2R5hQBNw8iG4oXzsz"
 			]
 		},
 		"hardhat/console.sol": {
