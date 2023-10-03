@@ -45,6 +45,7 @@ contract MarketPlace {
         uint expDate;
     }
 
+    string[] public logins;
     DeliveryOrder[] public deliveryOrders;
     Ticket[] public tickets;
     address public owner;
@@ -83,9 +84,11 @@ contract MarketPlace {
 
     // !!!!!!!! Привязан ли адресс к аккаутну пользователя? 
     function registration(string memory _login, string memory _firstName, string memory _lastName, string memory _password) external {
-        // require(keccak256(abi.encode(_login) !== keccak256(abi.encode(users[msg.sender]))));
-        // А как сделать проверку?? 
+        for(uint i; i < logins.length; i++){
+            require(keccak256(abi.encode(_login)) != keccak256(abi.encode(logins[i])));
+        }
         users[msg.sender] = User(_login, _firstName, _lastName, Role.User, 0);
+        logins.push(_login);
         passwords[msg.sender] = keccak256(abi.encode(_password));
     }
 
